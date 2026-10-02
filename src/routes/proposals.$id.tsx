@@ -15,7 +15,7 @@ import { normalizeTheme, newId } from "@/lib/deck/schema";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/proposals/$id")({
-  head: () => ({ meta: [{ title: "Proposal — Enterprise AI" }] }),
+  head: () => ({ meta: [{ title: "Proposal — VYRA" }] }),
   component: ProposalEditor,
 });
 

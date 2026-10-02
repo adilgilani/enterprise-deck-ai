@@ -15,7 +15,7 @@ import { api } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/presentations/")({
-  head: () => ({ meta: [{ title: "Presentations — Enterprise AI" }] }),
+  head: () => ({ meta: [{ title: "Presentations — VYRA" }] }),
   component: PresentationsPage,
 });
 

@@ -81,9 +81,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Enterprise AI Presentation Infrastructure" },
+      { title: "VYRA — Enterprise AI Presentation Infrastructure" },
       { name: "description", content: "Brand-locked AI presentations, proposals and meeting intelligence for the enterprise." },
-      { property: "og:title", content: "Enterprise AI Presentation Infrastructure" },
+      { property: "og:title", content: "VYRA — Enterprise AI Presentation Infrastructure" },
       { property: "og:description", content: "Brand-locked AI presentations, proposals and meeting intelligence for the enterprise." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

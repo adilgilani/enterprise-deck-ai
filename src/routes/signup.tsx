@@ -8,7 +8,7 @@ import { AuthLayout } from "@/components/auth-layout";
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/signup")({
-  head: () => ({ meta: [{ title: "Create workspace — Enterprise AI" }] }),
+  head: () => ({ meta: [{ title: "Create workspace — VYRA" }] }),
   component: SignupPage,
 });
 

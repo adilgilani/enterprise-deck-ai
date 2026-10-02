@@ -5,7 +5,7 @@ import { money } from "@/components/shared";
 import { useAnalytics } from "@/lib/api/hooks";
 
 export const Route = createFileRoute("/analytics")({
-  head: () => ({ meta: [{ title: "Analytics — Enterprise AI" }] }),
+  head: () => ({ meta: [{ title: "Analytics — VYRA" }] }),
   component: AnalyticsPage,
 });
 

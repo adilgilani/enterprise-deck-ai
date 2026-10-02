@@ -9,7 +9,7 @@ import { useAuth } from "@/lib/auth";
 import { API_URL } from "@/lib/api/client";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Sign in — Enterprise AI" }] }),
+  head: () => ({ meta: [{ title: "Sign in — VYRA" }] }),
   validateSearch: (s: Record<string, unknown>): { redirect?: string } => (typeof s["redirect"] === "string" ? { redirect: s["redirect"] } : {}),
   component: LoginPage,
 });

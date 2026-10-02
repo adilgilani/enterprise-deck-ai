@@ -8,6 +8,7 @@ user-created data. Demo password for every seeded user: DEMO_PASSWORD below (dev
 import random
 import uuid
 from datetime import UTC, datetime, timedelta
+from typing import Any
 
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -138,6 +139,45 @@ Typography: Instrument Serif for headlines, Geist for body copy, Geist Mono for 
 Layout: generous white space; maximum 6 bullets per slide; one idea per slide; headlines state the takeaway."""),
 ]
 
+EXTRA_BRANDS: list[dict[str, Any]] = [
+    {
+        "name": "Atlas Product Brand",
+        "default_style": "modern",
+        "brand_lock": True,
+        "colors": [
+            {"name": "Atlas Green", "hex": "#0F9D6E", "role": "primary"},
+            {"name": "Deep Forest", "hex": "#0B2E26", "role": "secondary"},
+            {"name": "Lime", "hex": "#B5E550", "role": "accent"},
+            {"name": "Mist", "hex": "#F1F6F3", "role": "surface"},
+            {"name": "White", "hex": "#FFFFFF", "role": "background"},
+            {"name": "Ink", "hex": "#14201B", "role": "text"},
+            {"name": "Sage", "hex": "#5E7068", "role": "muted"},
+        ],
+        "company_profile": {"name": "Atlas by Acme", "short_name": "Atlas", "industry": "AI platform", "description": "Atlas is Acme's AI-native enterprise platform: governed data, private AI models and workflow automation for regulated industries.", "services": ["Atlas Core", "Atlas Private AI", "Atlas Workflows"], "differentiators": ["Live in 90 days", "Private AI by default"]},
+        "tone_of_voice": {"summary": "Energetic, product-led and precise.", "do": ["Lead with what the product does"], "dont": ["Jargon"]},
+        "approved_messaging": ["Atlas — intelligence that ships.", "From pilot to production in 90 days."],
+        "guidelines": "Atlas sub-brand: green primary, lime accent used sparingly, modern sans-serif headlines, product screenshots preferred over stock imagery.",
+    },
+    {
+        "name": "Acme Private Office",
+        "default_style": "premium",
+        "brand_lock": True,
+        "colors": [
+            {"name": "Oxblood", "hex": "#7A1F2B", "role": "primary"},
+            {"name": "Onyx", "hex": "#16161C", "role": "secondary"},
+            {"name": "Champagne", "hex": "#D8B573", "role": "accent"},
+            {"name": "Ivory", "hex": "#F7F3EA", "role": "surface"},
+            {"name": "White", "hex": "#FFFFFF", "role": "background"},
+            {"name": "Ink", "hex": "#1B1B1F", "role": "text"},
+            {"name": "Stone", "hex": "#77736B", "role": "muted"},
+        ],
+        "company_profile": {"name": "Acme Private Office", "short_name": "Acme", "industry": "Executive advisory", "description": "Acme Private Office advises boards and C-suites on transformation, M&A integration and AI strategy.", "services": ["Board advisory", "M&A integration", "AI strategy"], "differentiators": ["Senior-partner led", "Discreet and independent"]},
+        "tone_of_voice": {"summary": "Understated, authoritative and discreet.", "do": ["Short, considered sentences"], "dont": ["Hype", "Exclamation marks"]},
+        "approved_messaging": ["Counsel for the decisions that define a decade.", "Quiet expertise, measurable outcomes."],
+        "guidelines": "Premium sub-brand for board-level work: dark onyx surfaces, champagne accents, serif headlines, generous white space.",
+    },
+]
+
 TEMPLATES = [
     ("Investor Narrative", "investor", "investor", "premium", "Series A–C fundraising narrative with traction, market and the ask."),
     ("Quarterly Board Review", "board", "board", "executive", "Board-ready performance review with KPIs, risks and decisions."),
@@ -265,6 +305,8 @@ async def seed(session: AsyncSession, force: bool = False) -> bool:
         created_at=NOW - timedelta(days=110),
     )
     session.add(brand)
+    for extra in EXTRA_BRANDS:
+        session.add(BrandSystem(organization_id=org.id, fonts=brand_svc.DEFAULT_FONTS, visual_rules=brand.visual_rules, created_at=NOW - timedelta(days=60), **extra))
     await session.flush()
 
     # templates

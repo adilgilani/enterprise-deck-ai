@@ -22,7 +22,7 @@ configure_logging(settings.log_level, settings.log_json)
 log = get_logger("app")
 
 DESCRIPTION = """
-Enterprise AI Presentation Infrastructure — presentations, proposals and meeting intelligence that all run
+**VYRA** — Enterprise AI Presentation Infrastructure: presentations, proposals and meeting intelligence that all run
 on one persistent **Brand System** and **Company AI Context**.
 
 * Authenticate with `POST /api/v1/auth/login` and send `Authorization: Bearer <token>`.

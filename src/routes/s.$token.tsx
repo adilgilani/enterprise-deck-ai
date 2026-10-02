@@ -11,7 +11,7 @@ import { normalizeTheme, type Deck } from "@/lib/deck/schema";
 import type { MeetingIntelligence } from "@/lib/api/types";
 
 export const Route = createFileRoute("/s/$token")({
-  head: () => ({ meta: [{ title: "Shared — Enterprise AI" }] }),
+  head: () => ({ meta: [{ title: "Shared — VYRA" }] }),
   component: SharedView,
 });
 

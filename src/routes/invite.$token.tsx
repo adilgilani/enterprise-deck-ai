@@ -8,7 +8,7 @@ import { AuthLayout } from "@/components/auth-layout";
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/invite/$token")({
-  head: () => ({ meta: [{ title: "Join workspace — Enterprise AI" }] }),
+  head: () => ({ meta: [{ title: "Join workspace — VYRA" }] }),
   component: InvitePage,
 });
 

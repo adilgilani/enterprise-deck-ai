@@ -9,13 +9,14 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { JobProgress, UsingBrandPanel } from "@/components/shared";
+import { BrandChooser } from "@/components/brand-chooser";
 import { api } from "@/lib/api/client";
 import { useJob } from "@/lib/api/hooks";
 import type { GenerateOut } from "@/lib/api/types";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/proposals/new")({
-  head: () => ({ meta: [{ title: "New proposal — Enterprise AI" }] }),
+  head: () => ({ meta: [{ title: "New proposal — VYRA" }] }),
   component: ProposalBuilder,
 });
 
@@ -32,6 +33,7 @@ function ProposalBuilder() {
   const [prompt, setPrompt] = useState("");
   const [sections, setSections] = useState<string[]>(SECTIONS.map(([k]) => k));
   const [creative, setCreative] = useState(false);
+  const [brandId, setBrandId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [gen, setGen] = useState<GenerateOut | null>(null);
   const { job } = useJob(gen?.job.id);
@@ -51,7 +53,7 @@ function ProposalBuilder() {
             client: f.client, industry: f.industry || null, contact_name: f.contact_name || null, contact_email: f.contact_email || null,
             opportunity: f.opportunity || null, title: f.title || "Untitled proposal", description: f.description,
             value: f.value ? Number(f.value.replace(/[^\d.]/g, "")) : null, deadline: f.deadline || null,
-            prompt: prompt || `Create a proposal for ${f.client}${f.opportunity ? ` for ${f.opportunity}` : ""}.`, sections, creative_mode: creative,
+            prompt: prompt || `Create a proposal for ${f.client}${f.opportunity ? ` for ${f.opportunity}` : ""}.`, sections, creative_mode: creative, brand_system_id: brandId,
           },
         }),
       );
@@ -86,6 +88,7 @@ function ProposalBuilder() {
             <F label="Deadline"><Input type="date" value={f.deadline} onChange={set("deadline")} /></F>
             <div className="sm:col-span-2"><F label="Description"><Textarea value={f.description} onChange={set("description")} placeholder="Context about the client and opportunity" className="min-h-[70px]" /></F></div>
           </div>
+          <div className="mt-8"><BrandChooser value={brandId} onChange={setBrandId} title="Brand guidelines for this proposal" /></div>
           <div className="surface mt-6 p-1">
             <Textarea value={prompt} onChange={(e) => setPrompt(e.target.value)} placeholder="Create a proposal for ABC Bank for a three-year digital transformation program using our previous banking projects." className="min-h-[120px] resize-none border-0 text-[15px] shadow-none focus-visible:ring-0" />
           </div>
@@ -101,7 +104,7 @@ function ProposalBuilder() {
           <Button size="lg" className="mt-8" onClick={() => void submit()} disabled={busy}>{busy ? <Loader2 className="animate-spin" /> : <Wand2 />}Generate proposal</Button>
         </div>
         <aside className="space-y-4 lg:pt-16">
-          <UsingBrandPanel />
+          <UsingBrandPanel brandId={brandId} />
           <div className="surface divide-y text-[13px]">
             <label className="flex items-center justify-between gap-3 p-4"><div><div className="font-medium">Brand Lock: {creative ? "OFF" : "ON"}</div><div className="text-[12px] text-muted-foreground">Approved logo, colors, fonts, templates & style</div></div><Switch checked={!creative} onCheckedChange={(v) => setCreative(!v)} /></label>
             <label className="flex items-center justify-between gap-3 p-4"><div><div className="font-medium">Creative Mode</div><div className="text-[12px] text-muted-foreground">More design freedom within the brand system</div></div><Switch checked={creative} onCheckedChange={setCreative} /></label>

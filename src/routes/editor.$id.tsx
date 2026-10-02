@@ -22,7 +22,7 @@ import { STYLE_INFO } from "@/lib/deck/theme";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/editor/$id")({
-  head: () => ({ meta: [{ title: "Editor — Enterprise AI" }] }),
+  head: () => ({ meta: [{ title: "Editor — VYRA" }] }),
   component: EditorPage,
 });
 

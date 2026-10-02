@@ -7,7 +7,7 @@ import { useBrandContext, usePresentations } from "@/lib/api/hooks";
 import { firstName, useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/")({
-  head: () => ({ meta: [{ title: "Home — Enterprise AI Presentation Infrastructure" }] }),
+  head: () => ({ meta: [{ title: "Home — VYRA" }] }),
   component: Home,
 });
 

@@ -1,7 +1,7 @@
 [project]
 name = "enterprise-ai-presentation-backend"
 version = "0.1.0"
-description = "Enterprise AI Presentation Infrastructure — API, workers and AI pipelines"
+description = "VYRA — Enterprise AI Presentation Infrastructure — API, workers and AI pipelines"
 requires-python = ">=3.12"
 dependencies = [
   "fastapi>=0.115",

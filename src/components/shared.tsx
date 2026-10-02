@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Check, CircleDashed, Loader2, ShieldCheck, X } from "lucide-react";
 import { formatDistanceToNowStrict } from "date-fns";
 import { cn } from "@/lib/utils";
-import { useBrandContext } from "@/lib/api/hooks";
+import { useBrandContext, useBrands } from "@/lib/api/hooks";
 import type { AuditEntry, Job } from "@/lib/api/types";
 
 // ---------------------------------------------------------------------------- formatting
@@ -169,20 +169,25 @@ export function BrandBadge({ className }: { className?: string }) {
 }
 
 /** "Using: Acme Corporation Brand ✓ Brand guidelines ✓ Logo …" — the company context the AI already has. */
-export function UsingBrandPanel({ className, compact }: { className?: string; compact?: boolean }) {
+export function UsingBrandPanel({ className, compact, brandId }: { className?: string; compact?: boolean; brandId?: string | null | undefined }) {
   const { data, isLoading } = useBrandContext();
+  const { data: brands } = useBrands();
   if (isLoading || !data) return <div className={cn("surface h-40 animate-pulse", className)} />;
+  const chosen = brandId ? brands?.find((b) => b.id === brandId) : undefined;
+  const colors = chosen ? chosen.colors : data.colors;
+  const brandName = chosen ? chosen.name : `${data.company_name} Brand`;
+  const locked = chosen ? chosen.brand_lock : data.brand_lock;
   return (
     <div className={cn("surface overflow-hidden", className)}>
       <div className="flex items-center gap-3 border-b bg-muted/30 px-4 py-3">
         <span className="flex -space-x-1">
-          {data.colors.slice(0, 4).map((c) => <span key={c.hex} className="size-4 rounded-full ring-2 ring-card" style={{ background: c.hex }} />)}
+          {colors.slice(0, 4).map((c) => <span key={c.hex} className="size-4 rounded-full ring-2 ring-card" style={{ background: c.hex }} />)}
         </span>
         <div className="min-w-0 flex-1">
           <div className="eyebrow">Using</div>
-          <div className="truncate text-[13.5px] font-medium">{data.company_name} Brand</div>
+          <div className="truncate text-[13.5px] font-medium">{brandName}</div>
         </div>
-        {data.brand_lock && <span className="rounded-full bg-foreground px-2 py-0.5 text-[10.5px] font-medium text-background">Brand Lock</span>}
+        {locked && <span className="rounded-full bg-foreground px-2 py-0.5 text-[10.5px] font-medium text-background">Brand Lock</span>}
       </div>
       <ul className={cn("grid gap-x-4 gap-y-2 p-4 text-[13px]", compact ? "grid-cols-2" : "grid-cols-1")}>
         {data.checks.map((c) => (
@@ -259,3 +264,4 @@ export function Avatar({ name, className }: { name: string | null | undefined; c
   const ini = (name ?? "?").split(/\s+/).filter(Boolean).map((p) => p[0]).join("").slice(0, 2).toUpperCase();
   return <span className={cn("grid size-6 shrink-0 place-items-center rounded-full bg-muted text-[10px] font-semibold text-foreground ring-2 ring-card", className)}>{ini}</span>;
 }
+

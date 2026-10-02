@@ -16,7 +16,7 @@ import { useAuth } from "@/lib/auth";
 import type { AISettings, ApiKey } from "@/lib/api/types";
 
 export const Route = createFileRoute("/settings")({
-  head: () => ({ meta: [{ title: "Settings — Enterprise AI" }] }),
+  head: () => ({ meta: [{ title: "Settings — VYRA" }] }),
   component: SettingsPage,
 });
 

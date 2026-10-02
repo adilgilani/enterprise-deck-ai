@@ -33,7 +33,7 @@ const nav = [
 ] as const;
 
 const PUBLIC_PREFIXES = ["/login", "/signup", "/invite", "/s/"];
-const FOCUS_PREFIXES = ["/editor", "/present", "/meetings/new"];
+const FOCUS_PREFIXES = ["/editor/", "/present/", "/meetings/new"];
 
 export function Logo({ compact }: { compact?: boolean }) {
   return (
@@ -44,8 +44,8 @@ export function Logo({ compact }: { compact?: boolean }) {
       </div>
       {!compact && (
         <div className="leading-tight">
-          <div className="text-[13px] font-semibold tracking-tight">Enterprise AI</div>
-          <div className="text-[11px] text-muted-foreground">Presentation Infrastructure</div>
+          <div className="text-[14px] font-semibold tracking-[0.18em]">VYRA</div>
+          <div className="text-[11px] text-muted-foreground">AI Presentation Infrastructure</div>
         </div>
       )}
     </div>

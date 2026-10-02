@@ -15,7 +15,7 @@ import { useDocument, useDocuments, useInvalidate } from "@/lib/api/hooks";
 import type { SearchHit } from "@/lib/api/types";
 
 export const Route = createFileRoute("/ai-library")({
-  head: () => ({ meta: [{ title: "AI Library — Enterprise AI" }] }),
+  head: () => ({ meta: [{ title: "AI Library — VYRA" }] }),
   component: AILibrary,
 });
 

@@ -14,7 +14,7 @@ import { useAuth } from "@/lib/auth";
 import type { Invitation, Role } from "@/lib/api/types";
 
 export const Route = createFileRoute("/team")({
-  head: () => ({ meta: [{ title: "Team — Enterprise AI" }] }),
+  head: () => ({ meta: [{ title: "Team — VYRA" }] }),
   component: TeamPage,
 });
 

@@ -1,4 +1,4 @@
-# Enterprise AI Presentation Infrastructure
+# VYRA — Enterprise AI Presentation Infrastructure
 
 Brand-locked AI **presentations**, client **proposals** and **meeting intelligence** — all running on one persistent
 **Brand System** and **Company AI Context**. A company defines its identity once; every deck, proposal and meeting

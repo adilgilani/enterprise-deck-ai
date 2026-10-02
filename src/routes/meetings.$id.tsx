@@ -14,7 +14,7 @@ import type { ActionItem, Job, MeetingFull } from "@/lib/api/types";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/meetings/$id")({
-  head: () => ({ meta: [{ title: "Meeting notes — Enterprise AI" }] }),
+  head: () => ({ meta: [{ title: "Meeting notes — VYRA" }] }),
   component: MeetingNotes,
 });
 

@@ -72,3 +72,20 @@ async def test_proposal_generation_uses_brand_and_knowledge(client):
 async def test_proposal_rejects_unknown_sections(client, ws):
     r = await client.post("/proposals/generate", json={"client": "X", "prompt": "Proposal", "sections": ["cover", "rm -rf"]}, headers=ws["headers"])
     assert r.status_code == 422
+
+
+async def test_multiple_brands_default_and_delete(client, ws):
+    h = ws["headers"]
+    default = (await client.get("/brand", headers=h)).json()
+    sub = (await client.post("/brand", json={"name": "Atlas Product Brand", "colors": [{"name": "Lime", "hex": "#65A30D", "role": "primary"}]}, headers=h)).json()
+    assert sub["is_default"] is False
+    assert len((await client.get("/brand/systems", headers=h)).json()) == 2
+    # generation can target a non-default brand
+    gen = (await client.post("/presentations/generate", json={"prompt": "Atlas launch", "slide_count": 3, "brand_system_id": sub["id"]}, headers=h)).json()
+    p = (await client.get(f"/presentations/{gen['presentation_id']}", headers=h)).json()
+    assert p["deck"]["theme"]["palette"]["primary"] == "#65A30D"
+    # the default brand cannot be deleted; others can
+    assert (await client.delete(f"/brand/{default['id']}", headers=h)).status_code == 400
+    assert (await client.post(f"/brand/{sub['id']}/default", headers=h)).json()["is_default"] is True
+    assert (await client.delete(f"/brand/{default['id']}", headers=h)).status_code == 204
+    assert [b["id"] for b in (await client.get("/brand/systems", headers=h)).json()] == [sub["id"]]

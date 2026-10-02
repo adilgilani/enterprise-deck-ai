@@ -14,7 +14,7 @@ import type { PresentationFull, Template } from "@/lib/api/types";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/templates")({
-  head: () => ({ meta: [{ title: "Templates — Enterprise AI" }] }),
+  head: () => ({ meta: [{ title: "Templates — VYRA" }] }),
   component: TemplatesPage,
 });
 

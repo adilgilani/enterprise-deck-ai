@@ -92,6 +92,16 @@ async def update_brand(brand_id: uuid.UUID, body: BrandUpsert, ctx: AdminCtx, db
     return await brand_out(db, b)
 
 
+@router.delete("/{brand_id}", status_code=204, summary="Delete a brand system (not the default)")
+async def delete_brand(brand_id: uuid.UUID, ctx: AdminCtx, db: DB, request: Request) -> None:
+    b = await get_owned(db, BrandSystem, brand_id, ctx.org_id)
+    if b.is_default:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Make another brand the default before deleting this one")
+    await audit(db, ctx, "brand.delete", "brand_system", b.id, {"name": b.name}, request)
+    await db.delete(b)
+    await db.commit()
+
+
 @router.post("/{brand_id}/default", response_model=BrandOut)
 async def make_default(brand_id: uuid.UUID, ctx: AdminCtx, db: DB) -> BrandOut:
     b = await get_owned(db, BrandSystem, brand_id, ctx.org_id)

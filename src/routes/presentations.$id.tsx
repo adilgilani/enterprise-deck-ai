@@ -4,7 +4,7 @@ import { Loader2 } from "lucide-react";
 import { usePresentation } from "@/lib/api/hooks";
 
 export const Route = createFileRoute("/presentations/$id")({
-  head: () => ({ meta: [{ title: "Presentation — Enterprise AI" }] }),
+  head: () => ({ meta: [{ title: "Presentation — VYRA" }] }),
   component: DeckDetail,
 });
 

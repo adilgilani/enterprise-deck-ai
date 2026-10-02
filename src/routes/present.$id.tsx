@@ -7,7 +7,7 @@ import { api } from "@/lib/api/client";
 import { normalizeTheme } from "@/lib/deck/schema";
 
 export const Route = createFileRoute("/present/$id")({
-  head: () => ({ meta: [{ title: "Present — Enterprise AI" }] }),
+  head: () => ({ meta: [{ title: "Present — VYRA" }] }),
   validateSearch: (s: Record<string, unknown>): { start?: number } => (s["start"] != null ? { start: Number(s["start"]) || 0 } : {}),
   component: PresentPage,
 });

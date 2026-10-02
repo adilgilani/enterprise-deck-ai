@@ -9,7 +9,7 @@ import type { ActionItem } from "@/lib/api/types";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/meetings/")({
-  head: () => ({ meta: [{ title: "Meetings — Enterprise AI" }] }),
+  head: () => ({ meta: [{ title: "Meetings — VYRA" }] }),
   component: MeetingsPage,
 });
 

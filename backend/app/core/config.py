@@ -23,7 +23,7 @@ class Settings(BaseSettings):
 
     # --- Core -----------------------------------------------------------------
     environment: Literal["development", "test", "production"] = "development"
-    app_name: str = "Enterprise AI Presentation Infrastructure"
+    app_name: str = "VYRA — Enterprise AI Presentation Infrastructure"
     # SQLite is the zero-dependency fallback for local development; Docker/production use PostgreSQL + pgvector.
     database_url: str = f"sqlite+aiosqlite:///{(BACKEND_DIR / 'data' / 'dev.db').as_posix()}"
     secret_key: SecretStr = SecretStr("dev-insecure-secret-change-me")

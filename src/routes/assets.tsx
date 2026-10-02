@@ -13,7 +13,7 @@ import type { Asset } from "@/lib/api/types";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/assets")({
-  head: () => ({ meta: [{ title: "Assets — Enterprise AI" }] }),
+  head: () => ({ meta: [{ title: "Assets — VYRA" }] }),
   component: AssetsPage,
 });
 

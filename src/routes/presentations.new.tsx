@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Chip, JobProgress, UsingBrandPanel } from "@/components/shared";
+import { BrandChooser } from "@/components/brand-chooser";
 import { SlideRenderer } from "@/components/slide";
 import { api } from "@/lib/api/client";
 import { useJob, usePresentation } from "@/lib/api/hooks";
@@ -17,7 +18,7 @@ import { STYLE_INFO } from "@/lib/deck/theme";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/presentations/new")({
-  head: () => ({ meta: [{ title: "New presentation — Enterprise AI" }] }),
+  head: () => ({ meta: [{ title: "New presentation — VYRA" }] }),
   component: NewPresentation,
 });
 
@@ -44,6 +45,7 @@ function NewPresentation() {
   const [count, setCount] = useState(10);
   const [custom, setCustom] = useState("");
   const [creative, setCreative] = useState(false);
+  const [brandId, setBrandId] = useState<string | null>(null);
   const [knowledge, setKnowledge] = useState(true);
   const [busy, setBusy] = useState(false);
   const [gen, setGen] = useState<GenerateOut | null>(null);
@@ -61,7 +63,7 @@ function NewPresentation() {
     setBusy(true);
     try {
       const slides = custom ? Number(custom) : count;
-      setGen(await api<GenerateOut>("/presentations/generate", { body: { prompt, deck_type: type, audience, tone, slide_count: slides, creative_mode: creative, use_knowledge: knowledge } }));
+      setGen(await api<GenerateOut>("/presentations/generate", { body: { prompt, deck_type: type, audience, tone, slide_count: slides, creative_mode: creative, use_knowledge: knowledge, brand_system_id: brandId } }));
     } catch (e) {
       toast.error((e as Error).message);
       setBusy(false);
@@ -85,7 +87,9 @@ function NewPresentation() {
         <div>
           <div className="eyebrow">New presentation</div>
           <h1 className="mt-2 font-serif text-[44px] leading-tight">What should we create?</h1>
-          <div className="surface mt-6 p-1">
+          <div className="mt-6"><BrandChooser value={brandId} onChange={setBrandId} title="1 · Choose your brand guidelines" /></div>
+          <div className="mt-8 text-[12.5px] font-medium text-muted-foreground">2 · Describe your presentation</div>
+          <div className="surface mt-2 p-1">
             <Textarea autoFocus value={prompt} onChange={(e) => setPrompt(e.target.value)} placeholder="Create a 12-slide investor presentation about our fintech platform…" className="min-h-[150px] resize-none border-0 text-[16px] shadow-none focus-visible:ring-0" onKeyDown={(e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) void submit(); }} />
             <div className="flex flex-wrap gap-1.5 border-t px-3 py-2.5">
               {EXAMPLES.map((ex) => <button key={ex} onClick={() => setPrompt(ex)} className="rounded-full border bg-muted/40 px-2.5 py-1 text-[11.5px] text-muted-foreground hover:text-foreground">{ex}</button>)}
@@ -107,7 +111,7 @@ function NewPresentation() {
           </div>
         </div>
         <aside className="space-y-4 lg:pt-16">
-          <UsingBrandPanel />
+          <UsingBrandPanel brandId={brandId} />
           <div className="surface divide-y text-[13px]">
             <label className="flex items-center justify-between gap-3 p-4"><div><div className="font-medium">Brand Lock</div><div className="text-[12px] text-muted-foreground">Approved colors, fonts & layouts only</div></div><Switch checked={!creative} onCheckedChange={(v) => setCreative(!v)} /></label>
             <label className="flex items-center justify-between gap-3 p-4"><div><div className="font-medium">Creative mode</div><div className="text-[12px] text-muted-foreground">More design freedom, still on-brand</div></div><Switch checked={creative} onCheckedChange={setCreative} /></label>

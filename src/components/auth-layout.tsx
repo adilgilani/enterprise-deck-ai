@@ -26,7 +26,7 @@ export function AuthLayout({ title, subtitle, children, footer }: { title: strin
           <div className="mt-8">{children}</div>
           {footer && <div className="mt-6 text-[13px] text-muted-foreground">{footer}</div>}
         </div>
-        <div className="text-[11.5px] text-muted-foreground">Enterprise AI Presentation Infrastructure · SOC 2-ready architecture</div>
+        <div className="text-[11.5px] text-muted-foreground">VYRA · Enterprise AI Presentation Infrastructure · SOC 2-ready architecture</div>
       </div>
       <div className="relative hidden overflow-hidden border-l bg-gradient-hero lg:block">
         <div className="absolute inset-0 flex flex-col justify-center px-16">

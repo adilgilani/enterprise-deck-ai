@@ -13,7 +13,7 @@ import { startMic, startSimulated, type MicCapture } from "@/lib/audio";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/meetings/new")({
-  head: () => ({ meta: [{ title: "Meeting Capture — Enterprise AI" }] }),
+  head: () => ({ meta: [{ title: "Meeting Capture — VYRA" }] }),
   component: MeetingCapture,
 });
 
