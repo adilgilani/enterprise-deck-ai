@@ -53,7 +53,7 @@ function H({ children, serif, size = "4.6cqw" }: { children: React.ReactNode; se
   );
 }
 
-function Body({ k, t, heading, slide, serif }: { k: SlideKind; t: (typeof themes)[Theme]; heading: string; slide?: Slide; serif: boolean }) {
+function Body({ k, t, heading, slide, serif }: { k: SlideKind; t: (typeof themes)[Theme]; heading: string; slide?: Slide | undefined; serif: boolean }) {
   const bullets = slide?.bullets ?? ["Enterprise momentum", "Operational efficiency", "Platform expansion", "Talent density"];
   switch (k) {
     case "title":
