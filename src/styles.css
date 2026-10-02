@@ -184,3 +184,43 @@
   }
   ::selection { background: var(--brand-soft); }
 }
+
+/* ---------------------------------------------------------------- slide engine */
+@keyframes s-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes s-up { from { opacity: 0; transform: translateY(3cqw); } to { opacity: 1; transform: none; } }
+@keyframes s-left { from { opacity: 0; transform: translateX(-4cqw); } to { opacity: 1; transform: none; } }
+@keyframes s-right { from { opacity: 0; transform: translateX(4cqw); } to { opacity: 1; transform: none; } }
+@keyframes s-scale { from { opacity: 0; transform: scale(0.86); } to { opacity: 1; transform: none; } }
+@keyframes s-reveal { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes s-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes s-draw { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+@keyframes s-dissolve { from { opacity: 0; filter: blur(8px); } to { opacity: 1; filter: none; } }
+@keyframes s-slide-in { from { opacity: 0.4; transform: translateX(6%); } to { opacity: 1; transform: none; } }
+
+.s-anim {
+  animation-duration: var(--dur, 600ms);
+  animation-delay: var(--d, 0ms);
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.s-anim-fade { animation-name: s-fade; }
+.s-anim-up { animation-name: s-up; }
+.s-anim-left { animation-name: s-left; }
+.s-anim-right { animation-name: s-right; }
+.s-anim-scale { animation-name: s-scale; }
+.s-anim-reveal { animation-name: s-reveal; }
+.s-grow { animation-name: s-grow; transform-origin: bottom; }
+.s-draw { stroke-dasharray: 100; animation: s-draw 1.2s 0.3s cubic-bezier(0.4, 0, 0.2, 1) both; }
+
+.tr-fade { animation: s-fade var(--tr, 500ms) ease both; }
+.tr-dissolve { animation: s-dissolve var(--tr, 600ms) ease both; }
+.tr-slide { animation: s-slide-in var(--tr, 500ms) cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+.s-editable { outline: none; border-radius: 0.25cqw; cursor: text; transition: box-shadow 0.15s; }
+.s-editable:hover { box-shadow: 0 0 0 0.15cqw color-mix(in oklab, var(--s-accent) 45%, transparent); }
+.s-editable:focus { box-shadow: 0 0 0 0.2cqw var(--s-accent); }
+.s-editable:empty::before { content: attr(data-placeholder); opacity: 0.35; }
+
+@media (prefers-reduced-motion: reduce) {
+  .s-anim, .s-draw, .tr-fade, .tr-dissolve, .tr-slide { animation: none !important; }
+}

@@ -1,50 +1,70 @@
 import { useState } from "react";
-import { FileText, Globe, Image as ImageIcon, Presentation, Sheet } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
+import { FileText, Globe, Presentation } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { runExport } from "@/lib/api/hooks";
 import { cn } from "@/lib/utils";
 
 const formats = [
-  { id: "pptx", label: "PowerPoint", ext: ".pptx", icon: Presentation },
-  { id: "pdf", label: "PDF", ext: ".pdf", icon: FileText },
-  { id: "web", label: "Web presentation", ext: "Link", icon: Globe },
-  { id: "img", label: "Images", ext: ".png", icon: ImageIcon },
-  { id: "gs", label: "Google Slides", ext: "Drive", icon: Sheet },
-];
+  { id: "pptx", label: "PowerPoint", ext: ".pptx · editable", icon: Presentation },
+  { id: "pdf", label: "PDF", ext: ".pdf · vector", icon: FileText },
+  { id: "web", label: "Web presentation", ext: "Present / link", icon: Globe },
+] as const;
 
-export function ExportDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
-  const [fmt, setFmt] = useState("pptx");
-  const [busy, setBusy] = useState(false);
-  const run = () => {
-    setBusy(true);
-    setTimeout(() => { setBusy(false); onOpenChange(false); toast.success("Export ready", { description: `Your ${formats.find((f) => f.id === fmt)?.label} file is downloading.` }); }, 1400);
+/** Real export: queues a backend job (python-pptx / reportlab), polls it, then downloads the file. */
+export function ExportDialog({ open, onOpenChange, presentationId, title, beforeExport }: { open: boolean; onOpenChange: (o: boolean) => void; presentationId?: string; title?: string; beforeExport?: (() => Promise<void>) | undefined }) {
+  const [fmt, setFmt] = useState<(typeof formats)[number]["id"]>("pptx");
+  const [notes, setNotes] = useState(true);
+  const [busy, setBusy] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  const run = async () => {
+    if (!presentationId) return;
+    if (fmt === "web") {
+      onOpenChange(false);
+      void navigate({ to: "/present/$id", params: { id: presentationId } });
+      return;
+    }
+    try {
+      setBusy("Saving…");
+      await beforeExport?.();
+      setBusy("Queued…");
+      await runExport(`/presentations/${presentationId}/export`, { format: fmt, include_notes: notes }, `${title ?? "presentation"}.${fmt}`, (j) => setBusy(j.step ?? "Rendering…"));
+      toast.success("Export ready", { description: `${title ?? "Presentation"}.${fmt} downloaded` });
+      onOpenChange(false);
+    } catch (e) {
+      toast.error("Export failed", { description: (e as Error).message });
+    } finally {
+      setBusy(null);
+    }
   };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>Export presentation</DialogTitle>
-          <DialogDescription>Brand fonts and colors are embedded automatically.</DialogDescription>
+          <DialogDescription>Brand fonts and colors are applied automatically. PowerPoint output uses native, editable text, charts and tables.</DialogDescription>
         </DialogHeader>
-        <div className="grid grid-cols-5 gap-2">
+        <div className="grid grid-cols-3 gap-2">
           {formats.map((f) => (
             <button key={f.id} onClick={() => setFmt(f.id)} className={cn("flex flex-col items-center gap-1.5 rounded-lg border p-3 text-center transition-all", fmt === f.id ? "border-foreground bg-accent" : "hover:bg-muted/50")}>
               <f.icon className="size-5" />
-              <span className="text-[11.5px] font-medium leading-tight">{f.label}</span>
+              <span className="text-[12px] font-medium leading-tight">{f.label}</span>
               <span className="font-mono text-[10px] text-muted-foreground">{f.ext}</span>
             </button>
           ))}
         </div>
-        <div className="divide-y rounded-lg border">
-          {[["Include speaker notes", true], ["Include animations", true], ["High resolution", false], ["Editable elements", true]].map(([l, d]) => (
-            <label key={l as string} className="flex items-center justify-between px-3.5 py-2.5 text-[13px]">
-              {l}<Switch defaultChecked={d as boolean} />
-            </label>
-          ))}
-        </div>
-        <Button onClick={run} disabled={busy} className="w-full">{busy ? "Preparing export…" : "Export presentation"}</Button>
+        {fmt === "pptx" && (
+          <div className="divide-y rounded-lg border text-[13px]">
+            <label className="flex items-center justify-between px-3.5 py-2.5">Include speaker notes<Switch checked={notes} onCheckedChange={setNotes} /></label>
+            <div className="flex items-center justify-between px-3.5 py-2.5 text-muted-foreground">Slide transitions mapped to PowerPoint<span className="text-[12px]">fade · dissolve · push</span></div>
+          </div>
+        )}
+        <Button onClick={() => void run()} disabled={!!busy || !presentationId} className="w-full">{busy ?? (fmt === "web" ? "Open web presentation" : "Export presentation")}</Button>
       </DialogContent>
     </Dialog>
   );

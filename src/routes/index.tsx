@@ -1,48 +1,45 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, FileSignature, Mic, Plus, Presentation, Upload, Download, Palette, Check } from "lucide-react";
+import { ArrowRight, FileSignature, Mic, Plus, Presentation, Upload, Palette, Check, Library } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Page } from "@/components/app-shell";
 import { DeckCard } from "@/components/deck-card";
-import { decks, brand } from "@/lib/mock-data";
-import { toast } from "sonner";
+import { useBrandContext, usePresentations } from "@/lib/api/hooks";
+import { firstName, useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Home — Enterprise AI Presentation Infrastructure" },
-      { name: "description", content: "Create presentations, proposals and meeting decks that look like your company." },
-      { property: "og:title", content: "Enterprise AI Presentation Infrastructure" },
-      { property: "og:description", content: "Create presentations, proposals and meeting decks that look like your company." },
-    ],
-  }),
+  head: () => ({ meta: [{ title: "Home — Enterprise AI Presentation Infrastructure" }] }),
   component: Home,
 });
 
 const quick = [
   { title: "Create Presentation", body: "Turn an idea into a complete deck.", icon: Presentation, to: "/presentations/new" },
   { title: "Create Proposal", body: "Generate a professional proposal using your company's branding.", icon: FileSignature, to: "/proposals/new" },
-  { title: "Start Meeting", body: "Capture your meeting and turn it into structured notes or a presentation.", icon: Mic, to: "/meetings" },
+  { title: "Start Meeting", body: "Capture your meeting and turn it into structured notes or a presentation.", icon: Mic, to: "/meetings/new" },
   { title: "Use Company Brand", body: "Your brand system is already connected.", icon: Palette, to: "/brand" },
 ] as const;
 
+function greeting() {
+  const h = new Date().getHours();
+  return h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
+}
+
 function Home() {
+  const { me } = useAuth();
+  const { data: decks, isLoading } = usePresentations({ limit: 6 });
+  const { data: ctx } = useBrandContext();
   return (
     <div>
       <section className="border-b bg-gradient-hero">
         <Page className="pb-12 pt-14">
-          <div className="eyebrow">Good morning, Adil · Acme Corporation</div>
-          <h1 className="mt-4 max-w-3xl font-serif text-[56px] leading-[1.02] tracking-tight">
-            Create presentations that look like your company.
-          </h1>
-          <p className="mt-4 max-w-xl text-[16px] text-muted-foreground">
-            Turn prompts, company knowledge, meetings, and data into beautiful, on-brand business experiences.
-          </p>
+          <div className="eyebrow">{greeting()}, {firstName(me?.user.name)} · {me?.organization.name}</div>
+          <h1 className="mt-4 max-w-3xl font-serif text-[56px] leading-[1.02] tracking-tight">Create presentations that look like your company.</h1>
+          <p className="mt-4 max-w-xl text-[16px] text-muted-foreground">Turn prompts, company knowledge, meetings, and data into beautiful, on-brand business experiences.</p>
           <div className="mt-8 flex flex-wrap items-center gap-2">
             <Button asChild size="lg"><Link to="/presentations/new"><Plus />Create presentation</Link></Button>
-            <Button asChild size="lg" variant="outline"><Link to="/meetings"><Mic />Start a meeting</Link></Button>
+            <Button asChild size="lg" variant="outline"><Link to="/meetings/new"><Mic />Start a meeting</Link></Button>
             <div className="mx-2 h-5 w-px bg-border" />
             <Button asChild variant="ghost" size="sm"><Link to="/proposals/new"><FileSignature />Create proposal</Link></Button>
-            <Button variant="ghost" size="sm" onClick={() => toast("Import started", { description: "Drop a .pptx or .key file to restyle it with your brand." })}><Download />Import presentation</Button>
+            <Button asChild variant="ghost" size="sm"><Link to="/ai-library"><Library />Add company knowledge</Link></Button>
             <Button asChild variant="ghost" size="sm"><Link to="/assets"><Upload />Upload asset</Link></Button>
           </div>
         </Page>
@@ -51,7 +48,7 @@ function Home() {
       <Page className="space-y-14">
         <section className="grid gap-4 md:grid-cols-4">
           {quick.map((q, i) => (
-            <Link key={q.title} to={q.to} className="group surface surface-hover flex flex-col p-5" style={{ animationDelay: `${i * 60}ms` }}>
+            <Link key={q.title} to={q.to} className="group surface surface-hover flex flex-col p-5">
               <div className="flex items-center justify-between">
                 <div className={i === 3 ? "grid size-9 place-items-center rounded-md bg-gradient-brand text-brand-foreground" : "grid size-9 place-items-center rounded-md border bg-muted/50"}>
                   <q.icon className="size-4" />
@@ -60,9 +57,9 @@ function Home() {
               </div>
               <div className="mt-8 text-[15px] font-medium">{q.title}</div>
               <p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">{q.body}</p>
-              {i === 3 && (
+              {i === 3 && ctx && (
                 <div className="mt-4 flex items-center gap-2 text-[12px] text-success">
-                  <Check className="size-3.5" />{brand.name} · {brand.colors.length} colors · 3 fonts
+                  <Check className="size-3.5" />{ctx.company_name} · {ctx.colors.length} colors · {Object.keys(ctx.fonts).length || 3} fonts
                 </div>
               )}
             </Link>
@@ -73,12 +70,13 @@ function Home() {
           <div className="mb-5 flex items-end justify-between">
             <div>
               <h2 className="text-[17px] font-semibold tracking-tight">Recent work</h2>
-              <p className="text-[13px] text-muted-foreground">Everything here uses the Acme brand system.</p>
+              <p className="text-[13px] text-muted-foreground">Everything here uses the {ctx?.company_name ?? "company"} brand system.</p>
             </div>
             <Link to="/presentations" className="text-[13px] text-muted-foreground hover:text-foreground">View all →</Link>
           </div>
           <div className="grid gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
-            {decks.map((d) => <DeckCard key={d.id} deck={d} />)}
+            {isLoading && Array.from({ length: 6 }).map((_, i) => <div key={i} className="aspect-video animate-pulse rounded-lg bg-muted" />)}
+            {decks?.slice(0, 6).map((d) => <DeckCard key={d.id} deck={d} />)}
           </div>
         </section>
 

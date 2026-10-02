@@ -10,24 +10,38 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AiLibraryRouteImport } from './routes/ai-library'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AssetsRouteImport } from './routes/assets'
 import { Route as BrandRouteImport } from './routes/brand'
 import { Route as LibraryRouteImport } from './routes/library'
-import { Route as MeetingsRouteImport } from './routes/meetings'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as TeamRouteImport } from './routes/team'
 import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as EditorIdRouteImport } from './routes/editor.$id'
+import { Route as InviteTokenRouteImport } from './routes/invite.$token'
+import { Route as MeetingsIndexRouteImport } from './routes/meetings.index'
+import { Route as MeetingsIdRouteImport } from './routes/meetings.$id'
+import { Route as MeetingsNewRouteImport } from './routes/meetings.new'
+import { Route as PresentIdRouteImport } from './routes/present.$id'
 import { Route as PresentationsIndexRouteImport } from './routes/presentations.index'
 import { Route as PresentationsIdRouteImport } from './routes/presentations.$id'
 import { Route as PresentationsNewRouteImport } from './routes/presentations.new'
 import { Route as ProposalsIndexRouteImport } from './routes/proposals.index'
+import { Route as ProposalsIdRouteImport } from './routes/proposals.$id'
 import { Route as ProposalsNewRouteImport } from './routes/proposals.new'
+import { Route as STokenRouteImport } from './routes/s.$token'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiLibraryRoute = AiLibraryRouteImport.update({
+  id: '/ai-library',
+  path: '/ai-library',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AnalyticsRoute = AnalyticsRouteImport.update({
@@ -50,14 +64,19 @@ const LibraryRoute = LibraryRouteImport.update({
   path: '/library',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MeetingsRoute = MeetingsRouteImport.update({
-  id: '/meetings',
-  path: '/meetings',
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TeamRoute = TeamRouteImport.update({
@@ -73,6 +92,31 @@ const TemplatesRoute = TemplatesRouteImport.update({
 const EditorIdRoute = EditorIdRouteImport.update({
   id: '/editor/$id',
   path: '/editor/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InviteTokenRoute = InviteTokenRouteImport.update({
+  id: '/invite/$token',
+  path: '/invite/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeetingsIndexRoute = MeetingsIndexRouteImport.update({
+  id: '/meetings/',
+  path: '/meetings/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeetingsIdRoute = MeetingsIdRouteImport.update({
+  id: '/meetings/$id',
+  path: '/meetings/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeetingsNewRoute = MeetingsNewRouteImport.update({
+  id: '/meetings/new',
+  path: '/meetings/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentIdRoute = PresentIdRouteImport.update({
+  id: '/present/$id',
+  path: '/present/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PresentationsIndexRoute = PresentationsIndexRouteImport.update({
@@ -95,61 +139,98 @@ const ProposalsIndexRoute = ProposalsIndexRouteImport.update({
   path: '/proposals/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProposalsIdRoute = ProposalsIdRouteImport.update({
+  id: '/proposals/$id',
+  path: '/proposals/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProposalsNewRoute = ProposalsNewRouteImport.update({
   id: '/proposals/new',
   path: '/proposals/new',
   getParentRoute: () => rootRouteImport,
 } as any)
+const STokenRoute = STokenRouteImport.update({
+  id: '/s/$token',
+  path: '/s/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ai-library': typeof AiLibraryRoute
   '/analytics': typeof AnalyticsRoute
   '/assets': typeof AssetsRoute
   '/brand': typeof BrandRoute
   '/library': typeof LibraryRoute
-  '/meetings': typeof MeetingsRoute
+  '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/team': typeof TeamRoute
   '/templates': typeof TemplatesRoute
   '/editor/$id': typeof EditorIdRoute
+  '/invite/$token': typeof InviteTokenRoute
+  '/meetings/$id': typeof MeetingsIdRoute
+  '/meetings/new': typeof MeetingsNewRoute
+  '/present/$id': typeof PresentIdRoute
   '/presentations/$id': typeof PresentationsIdRoute
   '/presentations/new': typeof PresentationsNewRoute
+  '/proposals/$id': typeof ProposalsIdRoute
   '/proposals/new': typeof ProposalsNewRoute
+  '/s/$token': typeof STokenRoute
+  '/meetings/': typeof MeetingsIndexRoute
   '/presentations/': typeof PresentationsIndexRoute
   '/proposals/': typeof ProposalsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ai-library': typeof AiLibraryRoute
   '/analytics': typeof AnalyticsRoute
   '/assets': typeof AssetsRoute
   '/brand': typeof BrandRoute
   '/library': typeof LibraryRoute
-  '/meetings': typeof MeetingsRoute
+  '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/team': typeof TeamRoute
   '/templates': typeof TemplatesRoute
   '/editor/$id': typeof EditorIdRoute
+  '/invite/$token': typeof InviteTokenRoute
+  '/meetings/$id': typeof MeetingsIdRoute
+  '/meetings/new': typeof MeetingsNewRoute
+  '/present/$id': typeof PresentIdRoute
   '/presentations/$id': typeof PresentationsIdRoute
   '/presentations/new': typeof PresentationsNewRoute
+  '/proposals/$id': typeof ProposalsIdRoute
   '/proposals/new': typeof ProposalsNewRoute
+  '/s/$token': typeof STokenRoute
+  '/meetings': typeof MeetingsIndexRoute
   '/presentations': typeof PresentationsIndexRoute
   '/proposals': typeof ProposalsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ai-library': typeof AiLibraryRoute
   '/analytics': typeof AnalyticsRoute
   '/assets': typeof AssetsRoute
   '/brand': typeof BrandRoute
   '/library': typeof LibraryRoute
-  '/meetings': typeof MeetingsRoute
+  '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/team': typeof TeamRoute
   '/templates': typeof TemplatesRoute
   '/editor/$id': typeof EditorIdRoute
+  '/invite/$token': typeof InviteTokenRoute
+  '/meetings/$id': typeof MeetingsIdRoute
+  '/meetings/new': typeof MeetingsNewRoute
+  '/present/$id': typeof PresentIdRoute
   '/presentations/$id': typeof PresentationsIdRoute
   '/presentations/new': typeof PresentationsNewRoute
+  '/proposals/$id': typeof ProposalsIdRoute
   '/proposals/new': typeof ProposalsNewRoute
+  '/s/$token': typeof STokenRoute
+  '/meetings/': typeof MeetingsIndexRoute
   '/presentations/': typeof PresentationsIndexRoute
   '/proposals/': typeof ProposalsIndexRoute
 }
@@ -157,70 +238,106 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/ai-library'
     | '/analytics'
     | '/assets'
     | '/brand'
     | '/library'
-    | '/meetings'
+    | '/login'
     | '/settings'
+    | '/signup'
     | '/team'
     | '/templates'
     | '/editor/$id'
+    | '/invite/$token'
+    | '/meetings/$id'
+    | '/meetings/new'
+    | '/present/$id'
     | '/presentations/$id'
     | '/presentations/new'
+    | '/proposals/$id'
     | '/proposals/new'
+    | '/s/$token'
+    | '/meetings/'
     | '/presentations/'
     | '/proposals/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/ai-library'
     | '/analytics'
     | '/assets'
     | '/brand'
     | '/library'
-    | '/meetings'
+    | '/login'
     | '/settings'
+    | '/signup'
     | '/team'
     | '/templates'
     | '/editor/$id'
+    | '/invite/$token'
+    | '/meetings/$id'
+    | '/meetings/new'
+    | '/present/$id'
     | '/presentations/$id'
     | '/presentations/new'
+    | '/proposals/$id'
     | '/proposals/new'
+    | '/s/$token'
+    | '/meetings'
     | '/presentations'
     | '/proposals'
   id:
     | '__root__'
     | '/'
+    | '/ai-library'
     | '/analytics'
     | '/assets'
     | '/brand'
     | '/library'
-    | '/meetings'
+    | '/login'
     | '/settings'
+    | '/signup'
     | '/team'
     | '/templates'
     | '/editor/$id'
+    | '/invite/$token'
+    | '/meetings/$id'
+    | '/meetings/new'
+    | '/present/$id'
     | '/presentations/$id'
     | '/presentations/new'
+    | '/proposals/$id'
     | '/proposals/new'
+    | '/s/$token'
+    | '/meetings/'
     | '/presentations/'
     | '/proposals/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AiLibraryRoute: typeof AiLibraryRoute
   AnalyticsRoute: typeof AnalyticsRoute
   AssetsRoute: typeof AssetsRoute
   BrandRoute: typeof BrandRoute
   LibraryRoute: typeof LibraryRoute
-  MeetingsRoute: typeof MeetingsRoute
+  LoginRoute: typeof LoginRoute
   SettingsRoute: typeof SettingsRoute
+  SignupRoute: typeof SignupRoute
   TeamRoute: typeof TeamRoute
   TemplatesRoute: typeof TemplatesRoute
   EditorIdRoute: typeof EditorIdRoute
+  InviteTokenRoute: typeof InviteTokenRoute
+  MeetingsIdRoute: typeof MeetingsIdRoute
+  MeetingsNewRoute: typeof MeetingsNewRoute
+  PresentIdRoute: typeof PresentIdRoute
   PresentationsIdRoute: typeof PresentationsIdRoute
   PresentationsNewRoute: typeof PresentationsNewRoute
+  ProposalsIdRoute: typeof ProposalsIdRoute
   ProposalsNewRoute: typeof ProposalsNewRoute
+  STokenRoute: typeof STokenRoute
+  MeetingsIndexRoute: typeof MeetingsIndexRoute
   PresentationsIndexRoute: typeof PresentationsIndexRoute
   ProposalsIndexRoute: typeof ProposalsIndexRoute
 }
@@ -232,6 +349,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-library': {
+      id: '/ai-library'
+      path: '/ai-library'
+      fullPath: '/ai-library'
+      preLoaderRoute: typeof AiLibraryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/analytics': {
@@ -262,11 +386,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LibraryRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/meetings': {
-      id: '/meetings'
-      path: '/meetings'
-      fullPath: '/meetings'
-      preLoaderRoute: typeof MeetingsRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -274,6 +398,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/team': {
@@ -295,6 +426,41 @@ declare module '@tanstack/react-router' {
       path: '/editor/$id'
       fullPath: '/editor/$id'
       preLoaderRoute: typeof EditorIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/invite/$token': {
+      id: '/invite/$token'
+      path: '/invite/$token'
+      fullPath: '/invite/$token'
+      preLoaderRoute: typeof InviteTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/meetings/': {
+      id: '/meetings/'
+      path: '/meetings'
+      fullPath: '/meetings/'
+      preLoaderRoute: typeof MeetingsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/meetings/$id': {
+      id: '/meetings/$id'
+      path: '/meetings/$id'
+      fullPath: '/meetings/$id'
+      preLoaderRoute: typeof MeetingsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/meetings/new': {
+      id: '/meetings/new'
+      path: '/meetings/new'
+      fullPath: '/meetings/new'
+      preLoaderRoute: typeof MeetingsNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/present/$id': {
+      id: '/present/$id'
+      path: '/present/$id'
+      fullPath: '/present/$id'
+      preLoaderRoute: typeof PresentIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/presentations/': {
@@ -325,6 +491,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProposalsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/proposals/$id': {
+      id: '/proposals/$id'
+      path: '/proposals/$id'
+      fullPath: '/proposals/$id'
+      preLoaderRoute: typeof ProposalsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/proposals/new': {
       id: '/proposals/new'
       path: '/proposals/new'
@@ -332,23 +505,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProposalsNewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/s/$token': {
+      id: '/s/$token'
+      path: '/s/$token'
+      fullPath: '/s/$token'
+      preLoaderRoute: typeof STokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AiLibraryRoute: AiLibraryRoute,
   AnalyticsRoute: AnalyticsRoute,
   AssetsRoute: AssetsRoute,
   BrandRoute: BrandRoute,
   LibraryRoute: LibraryRoute,
-  MeetingsRoute: MeetingsRoute,
+  LoginRoute: LoginRoute,
   SettingsRoute: SettingsRoute,
+  SignupRoute: SignupRoute,
   TeamRoute: TeamRoute,
   TemplatesRoute: TemplatesRoute,
   EditorIdRoute: EditorIdRoute,
+  InviteTokenRoute: InviteTokenRoute,
+  MeetingsIdRoute: MeetingsIdRoute,
+  MeetingsNewRoute: MeetingsNewRoute,
+  PresentIdRoute: PresentIdRoute,
   PresentationsIdRoute: PresentationsIdRoute,
   PresentationsNewRoute: PresentationsNewRoute,
+  ProposalsIdRoute: ProposalsIdRoute,
   ProposalsNewRoute: ProposalsNewRoute,
+  STokenRoute: STokenRoute,
+  MeetingsIndexRoute: MeetingsIndexRoute,
   PresentationsIndexRoute: PresentationsIndexRoute,
   ProposalsIndexRoute: ProposalsIndexRoute,
 }

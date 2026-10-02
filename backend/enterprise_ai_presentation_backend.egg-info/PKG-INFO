@@ -1,0 +1,34 @@
+Metadata-Version: 2.4
+Name: enterprise-ai-presentation-backend
+Version: 0.1.0
+Summary: Enterprise AI Presentation Infrastructure — API, workers and AI pipelines
+Requires-Python: >=3.12
+Requires-Dist: fastapi>=0.115
+Requires-Dist: uvicorn[standard]>=0.30
+Requires-Dist: pydantic>=2.8
+Requires-Dist: pydantic-settings>=2.7
+Requires-Dist: email-validator>=2.2
+Requires-Dist: sqlalchemy[asyncio]>=2.0.32
+Requires-Dist: alembic>=1.13
+Requires-Dist: asyncpg>=0.29
+Requires-Dist: aiosqlite>=0.20
+Requires-Dist: pgvector>=0.3
+Requires-Dist: argon2-cffi>=23.1
+Requires-Dist: pyjwt>=2.9
+Requires-Dist: httpx>=0.27
+Requires-Dist: websockets>=13
+Requires-Dist: python-multipart>=0.0.9
+Requires-Dist: python-pptx>=1.0
+Requires-Dist: reportlab>=4.2
+Requires-Dist: pypdf>=5.0
+Requires-Dist: python-docx>=1.1
+Requires-Dist: boto3>=1.35
+Requires-Dist: arq>=0.26
+Provides-Extra: whisper
+Requires-Dist: faster-whisper>=1.0; extra == "whisper"
+Requires-Dist: numpy>=1.26; extra == "whisper"
+Provides-Extra: embeddings
+Requires-Dist: fastembed>=0.4; extra == "embeddings"
+Provides-Extra: dev
+Requires-Dist: pytest>=8.3; extra == "dev"
+Requires-Dist: pytest-asyncio>=0.24; extra == "dev"

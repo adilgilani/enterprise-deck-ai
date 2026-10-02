@@ -1,0 +1,52 @@
+[project]
+name = "enterprise-ai-presentation-backend"
+version = "0.1.0"
+description = "Enterprise AI Presentation Infrastructure — API, workers and AI pipelines"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.30",
+  "pydantic>=2.8",
+  "pydantic-settings>=2.7",
+  "email-validator>=2.2",
+  "sqlalchemy[asyncio]>=2.0.32",
+  "alembic>=1.13",
+  "asyncpg>=0.29",
+  "aiosqlite>=0.20",
+  "pgvector>=0.3",
+  "argon2-cffi>=23.1",
+  "pyjwt>=2.9",
+  "httpx>=0.27",
+  "websockets>=13",
+  "python-multipart>=0.0.9",
+  "python-pptx>=1.0",
+  "reportlab>=4.2",
+  "pypdf>=5.0",
+  "python-docx>=1.1",
+  "boto3>=1.35",
+  "arq>=0.26",
+]
+
+[project.optional-dependencies]
+# Local open-source speech-to-text (CTranslate2 Whisper). Large download; only needed for STT_PROVIDER_EN=whisper.
+whisper = ["faster-whisper>=1.0", "numpy>=1.26"]
+# Local open-source embedding models (ONNX, no torch). Needed for EMBEDDING_PROVIDER=fastembed.
+embeddings = ["fastembed>=0.4"]
+dev = ["pytest>=8.3", "pytest-asyncio>=0.24"]
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.ruff]
+line-length = 120
