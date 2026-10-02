@@ -10,33 +10,219 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AnalyticsRouteImport } from './routes/analytics'
+import { Route as AssetsRouteImport } from './routes/assets'
+import { Route as BrandRouteImport } from './routes/brand'
+import { Route as LibraryRouteImport } from './routes/library'
+import { Route as MeetingsRouteImport } from './routes/meetings'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as TeamRouteImport } from './routes/team'
+import { Route as TemplatesRouteImport } from './routes/templates'
+import { Route as EditorIdRouteImport } from './routes/editor.$id'
+import { Route as PresentationsIndexRouteImport } from './routes/presentations.index'
+import { Route as PresentationsIdRouteImport } from './routes/presentations.$id'
+import { Route as PresentationsNewRouteImport } from './routes/presentations.new'
+import { Route as ProposalsIndexRouteImport } from './routes/proposals.index'
+import { Route as ProposalsNewRouteImport } from './routes/proposals.new'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AnalyticsRoute = AnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssetsRoute = AssetsRouteImport.update({
+  id: '/assets',
+  path: '/assets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrandRoute = BrandRouteImport.update({
+  id: '/brand',
+  path: '/brand',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibraryRoute = LibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeetingsRoute = MeetingsRouteImport.update({
+  id: '/meetings',
+  path: '/meetings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeamRoute = TeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TemplatesRoute = TemplatesRouteImport.update({
+  id: '/templates',
+  path: '/templates',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EditorIdRoute = EditorIdRouteImport.update({
+  id: '/editor/$id',
+  path: '/editor/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentationsIndexRoute = PresentationsIndexRouteImport.update({
+  id: '/presentations/',
+  path: '/presentations/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentationsIdRoute = PresentationsIdRouteImport.update({
+  id: '/presentations/$id',
+  path: '/presentations/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentationsNewRoute = PresentationsNewRouteImport.update({
+  id: '/presentations/new',
+  path: '/presentations/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProposalsIndexRoute = ProposalsIndexRouteImport.update({
+  id: '/proposals/',
+  path: '/proposals/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProposalsNewRoute = ProposalsNewRouteImport.update({
+  id: '/proposals/new',
+  path: '/proposals/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
+  '/assets': typeof AssetsRoute
+  '/brand': typeof BrandRoute
+  '/library': typeof LibraryRoute
+  '/meetings': typeof MeetingsRoute
+  '/settings': typeof SettingsRoute
+  '/team': typeof TeamRoute
+  '/templates': typeof TemplatesRoute
+  '/editor/$id': typeof EditorIdRoute
+  '/presentations/$id': typeof PresentationsIdRoute
+  '/presentations/new': typeof PresentationsNewRoute
+  '/proposals/new': typeof ProposalsNewRoute
+  '/presentations/': typeof PresentationsIndexRoute
+  '/proposals/': typeof ProposalsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
+  '/assets': typeof AssetsRoute
+  '/brand': typeof BrandRoute
+  '/library': typeof LibraryRoute
+  '/meetings': typeof MeetingsRoute
+  '/settings': typeof SettingsRoute
+  '/team': typeof TeamRoute
+  '/templates': typeof TemplatesRoute
+  '/editor/$id': typeof EditorIdRoute
+  '/presentations/$id': typeof PresentationsIdRoute
+  '/presentations/new': typeof PresentationsNewRoute
+  '/proposals/new': typeof ProposalsNewRoute
+  '/presentations': typeof PresentationsIndexRoute
+  '/proposals': typeof ProposalsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
+  '/assets': typeof AssetsRoute
+  '/brand': typeof BrandRoute
+  '/library': typeof LibraryRoute
+  '/meetings': typeof MeetingsRoute
+  '/settings': typeof SettingsRoute
+  '/team': typeof TeamRoute
+  '/templates': typeof TemplatesRoute
+  '/editor/$id': typeof EditorIdRoute
+  '/presentations/$id': typeof PresentationsIdRoute
+  '/presentations/new': typeof PresentationsNewRoute
+  '/proposals/new': typeof ProposalsNewRoute
+  '/presentations/': typeof PresentationsIndexRoute
+  '/proposals/': typeof ProposalsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/analytics'
+    | '/assets'
+    | '/brand'
+    | '/library'
+    | '/meetings'
+    | '/settings'
+    | '/team'
+    | '/templates'
+    | '/editor/$id'
+    | '/presentations/$id'
+    | '/presentations/new'
+    | '/proposals/new'
+    | '/presentations/'
+    | '/proposals/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/analytics'
+    | '/assets'
+    | '/brand'
+    | '/library'
+    | '/meetings'
+    | '/settings'
+    | '/team'
+    | '/templates'
+    | '/editor/$id'
+    | '/presentations/$id'
+    | '/presentations/new'
+    | '/proposals/new'
+    | '/presentations'
+    | '/proposals'
+  id:
+    | '__root__'
+    | '/'
+    | '/analytics'
+    | '/assets'
+    | '/brand'
+    | '/library'
+    | '/meetings'
+    | '/settings'
+    | '/team'
+    | '/templates'
+    | '/editor/$id'
+    | '/presentations/$id'
+    | '/presentations/new'
+    | '/proposals/new'
+    | '/presentations/'
+    | '/proposals/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnalyticsRoute: typeof AnalyticsRoute
+  AssetsRoute: typeof AssetsRoute
+  BrandRoute: typeof BrandRoute
+  LibraryRoute: typeof LibraryRoute
+  MeetingsRoute: typeof MeetingsRoute
+  SettingsRoute: typeof SettingsRoute
+  TeamRoute: typeof TeamRoute
+  TemplatesRoute: typeof TemplatesRoute
+  EditorIdRoute: typeof EditorIdRoute
+  PresentationsIdRoute: typeof PresentationsIdRoute
+  PresentationsNewRoute: typeof PresentationsNewRoute
+  ProposalsNewRoute: typeof ProposalsNewRoute
+  PresentationsIndexRoute: typeof PresentationsIndexRoute
+  ProposalsIndexRoute: typeof ProposalsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +234,123 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assets': {
+      id: '/assets'
+      path: '/assets'
+      fullPath: '/assets'
+      preLoaderRoute: typeof AssetsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/brand': {
+      id: '/brand'
+      path: '/brand'
+      fullPath: '/brand'
+      preLoaderRoute: typeof BrandRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library': {
+      id: '/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof LibraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/meetings': {
+      id: '/meetings'
+      path: '/meetings'
+      fullPath: '/meetings'
+      preLoaderRoute: typeof MeetingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/team': {
+      id: '/team'
+      path: '/team'
+      fullPath: '/team'
+      preLoaderRoute: typeof TeamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/templates': {
+      id: '/templates'
+      path: '/templates'
+      fullPath: '/templates'
+      preLoaderRoute: typeof TemplatesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/editor/$id': {
+      id: '/editor/$id'
+      path: '/editor/$id'
+      fullPath: '/editor/$id'
+      preLoaderRoute: typeof EditorIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentations/': {
+      id: '/presentations/'
+      path: '/presentations'
+      fullPath: '/presentations/'
+      preLoaderRoute: typeof PresentationsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentations/$id': {
+      id: '/presentations/$id'
+      path: '/presentations/$id'
+      fullPath: '/presentations/$id'
+      preLoaderRoute: typeof PresentationsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentations/new': {
+      id: '/presentations/new'
+      path: '/presentations/new'
+      fullPath: '/presentations/new'
+      preLoaderRoute: typeof PresentationsNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/proposals/': {
+      id: '/proposals/'
+      path: '/proposals'
+      fullPath: '/proposals/'
+      preLoaderRoute: typeof ProposalsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/proposals/new': {
+      id: '/proposals/new'
+      path: '/proposals/new'
+      fullPath: '/proposals/new'
+      preLoaderRoute: typeof ProposalsNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnalyticsRoute: AnalyticsRoute,
+  AssetsRoute: AssetsRoute,
+  BrandRoute: BrandRoute,
+  LibraryRoute: LibraryRoute,
+  MeetingsRoute: MeetingsRoute,
+  SettingsRoute: SettingsRoute,
+  TeamRoute: TeamRoute,
+  TemplatesRoute: TemplatesRoute,
+  EditorIdRoute: EditorIdRoute,
+  PresentationsIdRoute: PresentationsIdRoute,
+  PresentationsNewRoute: PresentationsNewRoute,
+  ProposalsNewRoute: ProposalsNewRoute,
+  PresentationsIndexRoute: PresentationsIndexRoute,
+  ProposalsIndexRoute: ProposalsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
