@@ -183,7 +183,7 @@ def meeting_analysis_prompt(*, title: str, participants: list[str], agenda: str 
                             language: str) -> tuple[str, str]:
     instructions = (
         "Analyze this meeting transcript and extract structured meeting intelligence. "
-        + ("The transcript may be in Urdu or mixed Urdu/English; write the output in English. " if language != "en" else "")
+        + ("The transcript may be in Urdu, Roman Urdu or mixed Urdu/English; write the output in English. " if language != "en" else "")
         + MEETING_SPEC
     )
     payload = "\n\n".join(filter(None, [
@@ -230,3 +230,13 @@ def document_analysis_prompt(*, filename: str, text: str) -> tuple[str, str]:
     )
     payload = f"<company_knowledge filename=\"{filename}\">\n{text[:24000]}\n</company_knowledge>"
     return instructions, payload
+
+
+def romanize_prompt(*, text: str) -> tuple[str, str]:
+    instructions = (
+        "Transliterate this live meeting transcript segment from Urdu script into Roman Urdu, written the way "
+        "Pakistanis type it (e.g. 'hamein agle quarter mein enterprise customers par focus karna chahiye'). "
+        "Do NOT translate: keep the same words and meaning. Keep English words, product names and numbers exactly as "
+        'they are. Return {"text": "<roman urdu>"}.'
+    )
+    return instructions, f"<transcript>\n{text}\n</transcript>"

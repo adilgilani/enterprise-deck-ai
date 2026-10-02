@@ -43,7 +43,7 @@ function MeetingCapture() {
   const [person, setPerson] = useState("");
   const [agenda, setAgenda] = useState("");
   const [showAgenda, setShowAgenda] = useState(false);
-  const [language, setLanguage] = useState<"en" | "ur" | "auto">("en");
+  const [language, setLanguage] = useState<"en" | "ur-Latn" | "ur" | "auto">("en");
   const [meetingId, setMeetingId] = useState<string | null>(null);
   const [provider, setProvider] = useState("");
   const [segments, setSegments] = useState<Seg[]>([]);
@@ -246,7 +246,7 @@ function MeetingCapture() {
             </div>
             {showAgenda ? <Textarea value={agenda} onChange={(e) => setAgenda(e.target.value)} placeholder="Agenda (one item per line)" className="min-h-[90px]" /> : <button onClick={() => setShowAgenda(true)} className="text-[13px] text-muted-foreground hover:text-foreground">+ Add agenda (optional)</button>}
             <div className="flex gap-1.5 pt-1">
-              {([["en", "English"], ["ur", "اردو Urdu"], ["auto", "Auto-detect"]] as const).map(([k, l]) => <button key={k} onClick={() => setLanguage(k)} className={cn("rounded-full border px-3 py-1 text-[12.5px]", language === k ? "border-foreground bg-foreground text-background" : "bg-card text-muted-foreground")}>{l}</button>)}
+              {([["en", "English"], ["ur-Latn", "Urdu · Roman"], ["ur", "اردو · Urdu script"], ["auto", "Auto-detect"]] as const).map(([k, l]) => <button key={k} onClick={() => setLanguage(k)} className={cn("rounded-full border px-3 py-1 text-[12.5px]", language === k ? "border-foreground bg-foreground text-background" : "bg-card text-muted-foreground")}>{l}</button>)}
             </div>
           </div>
           <div className="mt-14 flex flex-col items-center">
@@ -271,20 +271,20 @@ function MeetingCapture() {
         <span className="flex items-center gap-2 rounded-full bg-live/10 px-3 py-1.5 text-[14px] font-semibold text-live"><span className="size-2.5 animate-pulse rounded-full bg-live" />Recording</span>
         <div className="font-mono text-[34px] font-medium tabular-nums tracking-tight">{fmtTime(elapsed)}</div>
         <canvas ref={canvas} className="h-12 flex-1" />
-        <div className="text-right text-[12px] text-muted-foreground"><div className="font-medium text-foreground">{title || "Untitled meeting"}</div>{provider} STT{simulated && " · simulated audio"} · {language.toUpperCase()}</div>
+        <div className="text-right text-[12px] text-muted-foreground"><div className="font-medium text-foreground">{title || "Untitled meeting"}</div>{provider} STT{simulated && " · simulated audio"} · {language === "ur-Latn" ? "Roman Urdu" : language === "ur" ? "Urdu" : language === "auto" ? "Auto" : "English"}</div>
         <Button size="lg" variant="destructive" onClick={end} disabled={phase === "stopping"} className="h-12 px-6 text-[15px]">{phase === "stopping" ? <Loader2 className="animate-spin" /> : <Square className="fill-current" />}End Meeting</Button>
       </header>
       <div className="flex min-h-0 flex-1">
         <div ref={scroller} className="flex-1 overflow-y-auto px-10 py-8">
-          <div className="mx-auto max-w-3xl space-y-6" dir={language === "ur" ? "auto" : undefined}>
+          <div className="mx-auto max-w-3xl space-y-6">
             {segments.length === 0 && !partial && <div className="pt-24 text-center text-[18px] text-muted-foreground">Listening… the live transcript will appear here.</div>}
             {segments.map((s) => (
               <div key={s.seq} className="animate-rise">
                 <div className="text-[13px] font-semibold" style={{ color: color(s.speaker) }}>{s.speaker}<span className="ml-2 font-mono text-[11px] font-normal text-muted-foreground">{fmtTime(Math.floor(s.start_ms / 1000))}</span></div>
-                <div className="mt-1 text-[22px] leading-snug">{s.text}</div>
+                <div className="mt-1 text-[22px] leading-snug" dir="auto">{s.text}</div>
               </div>
             ))}
-            {partial && <div><div className="text-[13px] font-semibold text-muted-foreground">{partial.speaker}</div><div className="mt-1 text-[22px] italic leading-snug text-muted-foreground">{partial.text}</div></div>}
+            {partial && <div><div className="text-[13px] font-semibold text-muted-foreground">{partial.speaker}</div><div className="mt-1 text-[22px] italic leading-snug text-muted-foreground" dir="auto">{partial.text}</div></div>}
           </div>
         </div>
         <aside className="w-[380px] shrink-0 overflow-y-auto border-l bg-muted/20 p-6">

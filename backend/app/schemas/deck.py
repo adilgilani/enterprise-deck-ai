@@ -275,6 +275,7 @@ class Theme(Strict):
     fonts: Fonts = Field(default_factory=Fonts)
     logo_text: str = "ACME"
     logo_url: str | None = None
+    logo_asset_id: str | None = None
 
 
 class DeckContent(Strict):

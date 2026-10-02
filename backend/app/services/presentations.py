@@ -10,7 +10,7 @@ from typing import Any
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models import Organization, Presentation, PresentationSlide
+from app.models import BrandSystem, Organization, Presentation, PresentationSlide
 from app.schemas.deck import Deck, DeckContent, Slide, SlideEditResult
 from app.services import brand as brand_svc
 from app.services.ai import prompts
@@ -35,11 +35,16 @@ async def load_slides(session: AsyncSession, presentation_id: uuid.UUID) -> list
 async def deck_dict(session: AsyncSession, p: Presentation) -> dict[str, Any]:
     slides = await load_slides(session, p.id)
     schema = p.schema or {}
+    theme = dict(schema.get("theme") or {})
+    if p.brand_system_id:
+        brand = await session.get(BrandSystem, p.brand_system_id)
+        if brand is not None:
+            theme.update(await brand_svc.identity(session, brand))
     return {
         "version": schema.get("version", 1),
         "title": p.title,
         "subtitle": schema.get("subtitle", ""),
-        "theme": schema.get("theme") or {},
+        "theme": theme,
         "slides": [s.schema for s in slides],
     }
 

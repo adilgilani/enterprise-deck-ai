@@ -17,6 +17,7 @@ export function brandToTheme(b: Brand): Theme {
       muted: p["muted"] ?? "#6B6F7A",
     },
     fonts: { heading: b.fonts.heading ?? "Instrument Serif", body: b.fonts.body ?? "Geist", mono: b.fonts.mono ?? "Geist Mono" },
-    logo_text: (b.company_profile.short_name || b.company_profile.name || b.name || "ACME").split(" ")[0]?.toUpperCase() ?? "ACME",
+    logo_text: (b.name.replace(/ Brand$/, "") || b.company_profile.short_name || "BRAND").split(" ")[0]?.toUpperCase() ?? "BRAND",
+    logo_asset_id: b.logo_asset_id,
   };
 }

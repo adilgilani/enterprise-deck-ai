@@ -199,6 +199,18 @@ class PptxCanvas(Canvas):
             self.text(Box(b.x + 16, b.y + b.h - 30, b.w - 32, 18), alt, size=10, color=c.muted, font="mono")
 
 
+    def logo(self, b: Box, data: bytes) -> None:
+        try:
+            pic = self.shapes.add_picture(io.BytesIO(data), _e(b.x), _e(b.y), height=_e(b.h))
+            if pic.width > _e(b.w):  # very wide logos: fit width instead
+                ratio = _e(b.w) / pic.width
+                pic.width = _e(b.w)
+                pic.height = int(pic.height * ratio)
+            pic.name = "Logo"
+        except Exception:
+            pass
+
+
 def _set_transition(slide: Any, kind: str, duration_ms: int) -> None:
     xml = TRANSITIONS.get(kind)
     if not xml:

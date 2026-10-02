@@ -83,7 +83,7 @@ class WhisperSession(STTSession):
 
         model = await _get_model()
         pcm = np.frombuffer(audio, dtype=np.int16).astype(np.float32) / 32768.0
-        lang = None if self.language == "auto" else self.language
+        lang = None if self.language == "auto" else self.language.split("-")[0]
 
         def run() -> list[Any]:
             segments, _info = model.transcribe(pcm, language=lang, vad_filter=True, beam_size=1)

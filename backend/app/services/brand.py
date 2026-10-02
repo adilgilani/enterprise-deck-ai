@@ -56,16 +56,31 @@ async def logo_url(session: AsyncSession, brand: BrandSystem | None) -> str | No
     return f"/api/v1/assets/{asset.id}/file" if asset else None
 
 
+def logo_text(brand: BrandSystem | None) -> str:
+    """Wordmark fallback when no logo image is uploaded: the brand's own name, not the company profile."""
+    if brand is None:
+        return "ACME"
+    profile = brand.company_profile or {}
+    name = brand.name.removesuffix(" Brand").strip() or profile.get("short_name") or profile.get("name") or "Brand"
+    return name.split()[0].upper()[:14]
+
+
+async def identity(session: AsyncSession, brand: BrandSystem | None) -> dict[str, Any]:
+    """The brand's current logo/wordmark — merged into stored deck themes so logo changes apply everywhere."""
+    return {
+        "logo_text": logo_text(brand),
+        "logo_url": await logo_url(session, brand),
+        "logo_asset_id": str(brand.logo_asset_id) if brand and brand.logo_asset_id else None,
+    }
+
+
 async def theme_for(session: AsyncSession, brand: BrandSystem | None, style: str | None = None) -> dict[str, Any]:
     st = style if style in STYLES else (brand.default_style if brand else "executive")
-    profile = (brand.company_profile if brand else {}) or {}
-    name = profile.get("name") or (brand.name if brand else "Acme")
     theme = Theme(
         style=st,  # type: ignore[arg-type]
         palette=palette(brand),  # type: ignore[arg-type]
         fonts={**DEFAULT_FONTS, **((brand.fonts if brand else {}) or {})},  # type: ignore[arg-type]
-        logo_text=(profile.get("short_name") or name.split()[0]).upper()[:14],
-        logo_url=await logo_url(session, brand),
+        **(await identity(session, brand)),
     )
     return theme.model_dump()
 

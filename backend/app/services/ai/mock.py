@@ -1152,6 +1152,24 @@ def gen_document_analysis(ctx: dict[str, Any]) -> dict[str, Any]:
     return {"summary": summary, "category": category, "key_points": [k[:300] for k in key_points]}
 
 
+# ---------------------------------------------------------------------------- roman urdu
+
+_UR2LAT = {
+    "ا": "a", "آ": "aa", "ب": "b", "پ": "p", "ت": "t", "ٹ": "t", "ث": "s", "ج": "j", "چ": "ch", "ح": "h", "خ": "kh",
+    "د": "d", "ڈ": "d", "ذ": "z", "ر": "r", "ڑ": "r", "ز": "z", "ژ": "zh", "س": "s", "ش": "sh", "ص": "s", "ض": "z",
+    "ط": "t", "ظ": "z", "ع": "a", "غ": "gh", "ف": "f", "ق": "q", "ک": "k", "گ": "g", "ل": "l", "م": "m", "ن": "n",
+    "ں": "n", "و": "o", "ہ": "h", "ھ": "h", "ۂ": "h", "ء": "", "ی": "i", "ے": "e", "ئ": "i", "ۓ": "e", "ي": "i",
+    "ك": "k", "ه": "h", "۔": ".", "،": ",", "؟": "?", "٪": "%",
+    "۰": "0", "۱": "1", "۲": "2", "۳": "3", "۴": "4", "۵": "5", "۶": "6", "۷": "7", "۸": "8", "۹": "9",
+}
+
+
+def gen_romanize(ctx: dict[str, Any]) -> dict[str, Any]:
+    out = "".join(_UR2LAT.get(ch, "" if "\u064b" <= ch <= "\u065f" else ch) for ch in ctx.get("text", ""))
+    out = re.sub(r"\s+", " ", out).strip()
+    return {"text": out[:1].upper() + out[1:]}
+
+
 # ---------------------------------------------------------------------------- dispatch
 
 TASKS = {
@@ -1163,6 +1181,7 @@ TASKS = {
     "meeting.analyze": analyze_meeting,
     "meeting.deck": gen_meeting_deck,
     "document.analyze": gen_document_analysis,
+    "meeting.romanize": gen_romanize,
 }
 
 

@@ -29,7 +29,7 @@ class SonioxSession(STTSession):
         s = get_settings()
         if s.soniox_api_key is None:
             raise RuntimeError("STT provider soniox selected but SONIOX_API_KEY is not set")
-        hints = ["ur", "en"] if self.language in ("ur", "auto") else [self.language]
+        hints = ["en"] if self.language == "en" else ["ur", "en"]
         self.ws = await websockets.connect(s.soniox_url or URL, max_size=None)
         await self.ws.send(
             json.dumps(

@@ -241,3 +241,9 @@ class DocumentAnalysis(Strict):
     summary: str = Field(max_length=1500)
     category: DocumentCategory = "other"
     key_points: list[str] = Field(default_factory=list, max_length=10)
+
+
+class RomanText(Strict):
+    """Roman Urdu transliteration of one transcript segment."""
+
+    text: str = Field(max_length=6000)

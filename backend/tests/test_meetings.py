@@ -101,3 +101,32 @@ async def test_urdu_meeting_uses_urdu_provider_route(client, ws):
     assert get_stt_provider("ur").name == "mock"  # STT_PROVIDER_UR=mock in tests; soniox in production config
     m = (await client.post("/meetings", json={"title": "اردو میٹنگ", "language": "ur"}, headers=ws["headers"])).json()
     assert m["language"] == "ur"
+
+
+async def test_roman_urdu_meeting_transcript_is_latin_script(client, ws):
+    h = ws["headers"]
+    m = (await client.post("/meetings", json={"title": "Roman Urdu sync", "language": "ur-Latn", "participants": [{"name": "Ahmed"}, {"name": "Sara"}]}, headers=h)).json()
+    assert m["language"] == "ur-Latn"
+    ticket = (await client.post(f"/meetings/{m['id']}/start", headers=h)).json()
+    with TestClient(app) as tc, tc.websocket_connect(f"/api/v1/meetings/{m['id']}/live?ticket={ticket['ticket']}") as sock:
+        assert sock.receive_json()["type"] == "ready"
+        for _ in range(80):
+            sock.send_bytes(b"\x00\x00" * 1600)
+        sock.send_text(json.dumps({"type": "stop"}))
+        texts = []
+        while True:
+            msg = sock.receive_json()
+            if msg["type"] == "segment":
+                texts.append(msg["text"])
+            if msg["type"] == "stopped":
+                break
+    assert texts and all(not any("\u0600" <= ch <= "\u06ff" for ch in t) for t in texts)
+
+
+async def test_urdu_script_is_romanized_when_requested():
+    import uuid as _uuid
+
+    from app.services.meetings import romanize
+
+    out = await romanize("کیا فنانس بجٹ کی تصدیق کر سکتا ہے؟", _uuid.uuid4(), None, None)
+    assert out and not any("\u0600" <= ch <= "\u06ff" for ch in out)

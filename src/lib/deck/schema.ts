@@ -195,6 +195,8 @@ export interface Theme {
   fonts: { heading: string; body: string; mono: string };
   logo_text?: string;
   logo_url?: string | null;
+  /** Brand logo (Asset id). Rendered in every slide header; falls back to the wordmark. */
+  logo_asset_id?: string | null;
 }
 
 export interface Deck {

@@ -1,7 +1,7 @@
 """STT provider routing by meeting language.
 
     en   → STT_PROVIDER_EN  (mock | whisper | deepgram)
-    ur   → STT_PROVIDER_UR  (mock | soniox | whisper)
+    ur / ur-Latn → STT_PROVIDER_UR  (mock | soniox | whisper); ur-Latn is transliterated to Roman Urdu
     auto → Urdu provider (Soniox handles Urdu/English code-switching)
 """
 

@@ -136,16 +136,34 @@ export function SlideRenderer({ slide, theme: rawTheme, index = 0, total = 1, an
 /** Back-compat alias used by cards. */
 export const SlideView = SlideRenderer;
 
+function logoAssetId(theme: Theme): string | null {
+  if (theme.logo_asset_id) return theme.logo_asset_id;
+  const m = /\/assets\/([0-9a-f-]{32,36})\/file/i.exec(theme.logo_url ?? "");
+  return m?.[1] ?? null;
+}
+
 function Header({ index, total }: { index: number; total: number }) {
   const { theme, c } = useR();
+  const logo = useAssetSrc(logoAssetId(theme));
   return (
     <div className="relative z-10 flex items-center justify-between">
+      {logo ? (
+        <img
+          src={logo}
+          alt={theme.logo_text ?? "Logo"}
+          draggable={false}
+          className="h-[3.4cqw] max-w-[24cqw] object-contain object-left"
+          // On dark slides render the logo as a white knockout so it stays legible.
+          style={c.dark ? { filter: "brightness(0) invert(1)" } : undefined}
+        />
+      ) : (
       <div className="flex items-center gap-[0.9cqw]">
         <div className="relative size-[2cqw] rounded-[0.35cqw]" style={{ background: c.dark ? c.accent : c.secondary }}>
           <div className="absolute inset-[0.45cqw] rounded-[0.18cqw] border border-white/40" />
         </div>
         <span className="text-[1.25cqw] font-semibold tracking-[0.12em]">{theme.logo_text ?? "ACME"}</span>
       </div>
+      )}
       <span className="font-mono text-[1.05cqw]" style={{ color: c.muted }}>
         {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
       </span>
@@ -683,7 +701,7 @@ function PeopleBlock({ el, index }: { el: PeopleEl; index: number }) {
   );
 }
 
-function useAssetSrc(assetId: string | null | undefined, src?: string | null): string | null {
+function useAssetSrc(assetId: string | null | undefined, src?: string | null | undefined): string | null {
   const [url, setUrl] = useState<string | null>(src ?? null);
   useEffect(() => {
     if (src) return setUrl(src);

@@ -230,6 +230,15 @@ class PdfCanvas(Canvas):
             self.text(Box(b.x + 16, b.y + b.h - 28, b.w - 32, 16), alt, size=9, color=c.muted, font="mono")
 
 
+    def logo(self, b: Box, data: bytes) -> None:
+        try:
+            self.cv.drawImage(ImageReader(io.BytesIO(data)), b.x, self._y(b.y, b.h), b.w, b.h, preserveAspectRatio=True, anchor="w", mask="auto")
+        except Exception:
+            pass
+
+
+
+
 def build_slides_pdf(deck: dict[str, Any], images: dict[str, bytes] | None = None) -> bytes:
     buf = io.BytesIO()
     cv = rl_canvas.Canvas(buf, pagesize=(W, H))

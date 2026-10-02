@@ -296,3 +296,29 @@ def duration(m: Meeting) -> int | None:
         return int((m.ended_at - m.started_at).total_seconds())
     return None
 
+
+
+ARABIC_SCRIPT = re.compile(r"[\u0600-\u06FF\u0750-\u077F]")
+
+
+async def romanize(text: str, org_id: uuid.UUID, user_id: uuid.UUID | None, org_settings: dict[str, Any] | None) -> str:
+    """Urdu script → Roman Urdu (live transcripts for language 'ur-Latn'). Falls back to the original text."""
+    if not ARABIC_SCRIPT.search(text):
+        return text
+    from app.schemas.ai import RomanText
+
+    instructions, payload = prompts.romanize_prompt(text=text)
+    try:
+        out = await ai_service.generate(
+            task="meeting.romanize",
+            schema=RomanText,
+            instructions=instructions,
+            payload=payload,
+            ctx=AIContext(organization_id=org_id, user_id=user_id, org_settings=org_settings),
+            context={"text": text},
+            temperature=0.0,
+            max_tokens=800,
+        )
+        return out.text.strip() or text
+    except Exception:
+        return text

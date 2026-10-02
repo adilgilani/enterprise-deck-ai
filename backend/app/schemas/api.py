@@ -393,7 +393,7 @@ class MeetingCreate(BaseModel):
     title: str = Field(min_length=1, max_length=300)
     participants: list[ParticipantIn] = Field(default_factory=list, max_length=50)
     agenda: str | None = Field(None, max_length=5000)
-    language: Literal["en", "ur", "auto"] = "en"
+    language: Literal["en", "ur", "ur-Latn", "auto"] = "en"  # ur-Latn = Roman Urdu transcript
     scheduled_at: datetime | None = None
     location: str | None = Field(None, max_length=200)
 

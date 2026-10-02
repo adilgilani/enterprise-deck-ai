@@ -83,6 +83,10 @@ class Canvas(ABC):
     @abstractmethod
     def image(self, b: Box, data: bytes | None, alt: str, c: Colors) -> None: ...
 
+    @abstractmethod
+    def logo(self, b: Box, data: bytes) -> None:
+        """Place a logo inside `b`, height-fitted, aspect ratio preserved, left-aligned."""
+
 
 def _mix(hex_a: str, hex_b: str, t: float) -> str:
     a = [int(hex_a.lstrip("#")[i : i + 2], 16) for i in (0, 2, 4)]
@@ -128,8 +132,12 @@ class SlideRenderer:
         self.col = col
         self.c.rect(Box(0, 0, W, H), col.bg)
         # header: logo mark + wordmark, page number
-        self.c.rect(Box(PAD, 30, 11, 11), col.accent, radius=2)
-        self.c.text(Box(PAD + 18, 26, 300, 20), self.theme.get("logo_text", "ACME"), size=10, color=col.fg, bold=True)
+        logo = self.images.get("__logo__")
+        if logo:
+            self.c.logo(Box(PAD, 18, 170, 30), logo)
+        else:
+            self.c.rect(Box(PAD, 30, 11, 11), col.accent, radius=2)
+            self.c.text(Box(PAD + 18, 26, 300, 20), self.theme.get("logo_text", "ACME"), size=10, color=col.fg, bold=True)
         self.c.text(Box(W - PAD - 100, 26, 100, 20), f"{index + 1:02d} / {total:02d}", size=9, color=col.muted, font="mono", align="right")
 
         layout = slide.get("layout", "split")

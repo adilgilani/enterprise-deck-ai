@@ -28,6 +28,16 @@ SCRIPT_UR = [
     (2, "ایک خطرہ یہ ہے کہ یورپی ڈیٹا ریجن جنوری سے پہلے تیار نہیں ہوگا۔"),
     (3, "سیلز ٹیم کے لیے اینیبلمنٹ ڈیک میں بناؤں گی۔"),
 ]
+SCRIPT_UR_ROMAN = [
+    (0, "Hamein agli quarter mein enterprise customers par focus karna chahiye."),
+    (1, "Main agree karti hoon, lekin hamein implementation time kam karna hoga."),
+    (2, "Is waqt onboarding mein average 41 din lagte hain. Target 21 din se kam hona chahiye."),
+    (0, "Theek hai, yeh decision hai: quarter ke end tak 21 din ki onboarding."),
+    (3, "Is ke liye hamein do mazeed solution engineers chahiye honge. Budget taqreeban 380K dollars hai."),
+    (1, "Kya finance agle Friday tak budget confirm kar sakta hai?"),
+    (2, "Ek risk yeh hai ke EU data region January se pehle ready nahi hoga."),
+    (3, "Sales team ke liye enablement deck main bana doon gi, October 14 tak."),
+]
 DEFAULT_NAMES = ["Ahmed Raza", "Sara Malik", "Omar Shah", "Priya Nair", "Lena Ortiz"]
 SECONDS_PER_LINE = 3.2
 
@@ -35,7 +45,7 @@ SECONDS_PER_LINE = 3.2
 class MockSession(STTSession):
     def __init__(self, language: str, participants: list[str]) -> None:
         super().__init__(language, participants)
-        self.script = SCRIPT_UR if language == "ur" else SCRIPT_EN
+        self.script = SCRIPT_UR_ROMAN if language == "ur-Latn" else SCRIPT_UR if language == "ur" else SCRIPT_EN
         self.names = participants or DEFAULT_NAMES
         self.index = 0
         self.partial_sent = False

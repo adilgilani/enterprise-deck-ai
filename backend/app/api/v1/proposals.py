@@ -7,7 +7,7 @@ from sqlalchemy import func, or_, select
 from app.api.deps import DB, AICtx, CurrentCtx, EditorCtx, audit, get_owned
 from app.api.v1.common import authors, create_share, job_out, list_shares
 from app.db.base import utcnow
-from app.models import Proposal
+from app.models import BrandSystem, Proposal
 from app.schemas.api import (
     GenerateOut,
     JobOut,
@@ -53,6 +53,11 @@ async def summaries(db: DB, items: list[Proposal]) -> list[ProposalSummary]:
 
 async def full(db: DB, p: Proposal) -> ProposalOut:
     [s] = await summaries(db, [p])
+    schema = dict(p.schema or {})
+    if p.brand_system_id:
+        brand = await db.get(BrandSystem, p.brand_system_id)
+        if brand is not None:
+            schema["theme"] = {**(schema.get("theme") or {}), **(await brand_svc.identity(db, brand))}
     return ProposalOut(
         **s.model_dump(),
         contact_name=p.contact_name,
@@ -60,7 +65,7 @@ async def full(db: DB, p: Proposal) -> ProposalOut:
         opportunity=p.opportunity,
         description=p.description,
         prompt=p.prompt,
-        schema_=p.schema or {},
+        schema_=schema,
         brand_system_id=p.brand_system_id,
     )
 

@@ -30,6 +30,14 @@ async def _images(ctx: JobContext, org_id: uuid.UUID, deck: dict[str, Any]) -> d
         if e.get("type") == "image" and e.get("asset_id")
     }
     out: dict[str, bytes] = {}
+    logo_id = (deck.get("theme") or {}).get("logo_asset_id")
+    if logo_id:
+        try:
+            logo = await ctx.session.get(Asset, uuid.UUID(str(logo_id)))
+        except ValueError:
+            logo = None
+        if logo and logo.organization_id == org_id and logo.mime_type in ("image/png", "image/jpeg", "image/gif"):
+            out["__logo__"] = await get_storage().get(logo.storage_key)
     for aid in ids:
         try:
             asset = await ctx.session.get(Asset, uuid.UUID(aid))

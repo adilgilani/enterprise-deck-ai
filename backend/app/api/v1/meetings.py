@@ -20,7 +20,7 @@ from app.core.logging import get_logger
 from app.core.security import create_ws_ticket, decode_token
 from app.db.base import utcnow
 from app.db.session import SessionLocal
-from app.models import ActionItem, Meeting, MeetingInsight, MeetingParticipant, TranscriptSegment
+from app.models import ActionItem, Meeting, MeetingInsight, MeetingParticipant, Organization, TranscriptSegment
 from app.schemas.api import (
     ActionItemCreate,
     ActionItemOut,
@@ -39,7 +39,7 @@ from app.schemas.api import (
     WsTicketOut,
 )
 from app.services import jobs
-from app.services.meetings import duration, live_extract, segments_for
+from app.services.meetings import duration, live_extract, romanize, segments_for
 from app.services.storage import get_storage, make_key
 from app.services.stt import get_stt_provider
 from app.services.stt.base import SAMPLE_RATE
@@ -334,6 +334,9 @@ async def live(ws: WebSocket, meeting_id: uuid.UUID, ticket: str = "") -> None:
             await ws.close(code=4404)
             return
         names = [p.name for p in (await db.execute(select(MeetingParticipant).where(MeetingParticipant.meeting_id == m.id))).scalars()]
+        org_row = await db.get(Organization, org_id)
+        org_settings = org_row.settings if org_row else None
+        created_by = m.created_by
         seq0 = (await db.execute(select(func.coalesce(func.max(TranscriptSegment.seq), 0)).where(TranscriptSegment.meeting_id == m.id))).scalar_one()
         language = m.language
 
@@ -376,11 +379,14 @@ async def live(ws: WebSocket, meeting_id: uuid.UUID, ticket: str = "") -> None:
             elif ev.kind == "error":
                 await send({"type": "error", "message": ev.text})
             elif ev.kind == "final" and ev.text.strip():
+                text = ev.text
+                if language == "ur-Latn":
+                    text = await romanize(text, org_id, created_by, org_settings)
                 state["seq"] += 1
                 async with SessionLocal() as db:
-                    db.add(TranscriptSegment(meeting_id=meeting_id, seq=state["seq"], speaker=ev.speaker[:120], text=ev.text, start_ms=ev.start_ms, end_ms=ev.end_ms, language=ev.language))
+                    db.add(TranscriptSegment(meeting_id=meeting_id, seq=state["seq"], speaker=ev.speaker[:120], text=text, start_ms=ev.start_ms, end_ms=ev.end_ms, language=ev.language))
                     await db.commit()
-                await send({"type": "segment", "seq": state["seq"], "speaker": ev.speaker, "text": ev.text, "start_ms": ev.start_ms, "end_ms": ev.end_ms})
+                await send({"type": "segment", "seq": state["seq"], "speaker": ev.speaker, "text": text, "start_ms": ev.start_ms, "end_ms": ev.end_ms})
 
     async def insights_loop() -> None:
         interval = get_settings().live_insight_interval_seconds
