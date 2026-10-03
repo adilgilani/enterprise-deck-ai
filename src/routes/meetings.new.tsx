@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { JobProgress } from "@/components/shared";
 import { api, wsUrl } from "@/lib/api/client";
-import { useJob } from "@/lib/api/hooks";
+import { useBrands, useJob, useTemplates } from "@/lib/api/hooks";
 import type { Job, MeetingFull, WsTicket } from "@/lib/api/types";
 import { startMic, startSimulated, type MicCapture } from "@/lib/audio";
 import { cn } from "@/lib/utils";
@@ -58,6 +58,10 @@ function MeetingCapture() {
   const canvas = useRef<HTMLCanvasElement | null>(null);
   const scroller = useRef<HTMLDivElement | null>(null);
   const { job: polled } = useJob(job?.id);
+  const { data: brands } = useBrands();
+  const { data: templates } = useTemplates();
+  const defaultBrand = brands?.find((b) => b.is_default) ?? brands?.[0];
+  const defaultTemplate = templates?.find((t) => t.id === defaultBrand?.default_template_id);
 
   useEffect(() => {
     if (phase !== "recording") return;
@@ -213,6 +217,13 @@ function MeetingCapture() {
         <div className="w-full max-w-3xl animate-rise text-center">
           <div className="eyebrow">Meeting ended · {fmtTime(elapsed)} · {segments.length} transcript segments</div>
           <h1 className="mt-3 font-serif text-[48px] leading-tight">What would you like to create?</h1>
+          {defaultBrand && (
+            <div className="mt-4 inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1.5 text-[12.5px] text-muted-foreground">
+              <span className="flex -space-x-1">{defaultBrand.colors.slice(0, 3).map((c, i) => <span key={i} className="size-3 rounded-full ring-2 ring-card" style={{ background: c.hex }} />)}</span>
+              Presentations use <b className="font-medium text-foreground">{defaultBrand.name}</b>
+              {defaultTemplate ? <> · <b className="font-medium text-foreground">{defaultTemplate.name}</b> template</> : null}
+            </div>
+          )}
           <div className="mt-10 grid gap-4 md:grid-cols-3">
             {([
               ["notes", FileText, "Meeting Notes", "Summary, decisions, action items, owners and deadlines."],

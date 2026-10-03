@@ -207,12 +207,19 @@ def live_insights_prompt(*, segments: list[dict[str, Any]], known: dict[str, Any
 
 
 def meeting_deck_prompt(*, title: str, intelligence: dict[str, Any], brand: dict[str, Any] | None,
-                        participants: list[str]) -> tuple[str, str]:
+                        participants: list[str], template_name: str | None = None,
+                        template_layouts: list[str] | None = None) -> tuple[str, str]:
+    template_hint = ""
+    if template_name and template_layouts:
+        template_hint = (
+            f"Design it with the company's approved \"{template_name}\" template: reuse its layouts "
+            f"({', '.join(dict.fromkeys(template_layouts))}) wherever they fit the content, and keep its visual rhythm. "
+        )
     instructions = (
         "Turn this meeting intelligence into a branded executive readout deck of 8-10 slides with this structure: "
         "Meeting overview (hero), Executive summary, Key discussion, Decisions, Strategic priorities, Important data "
         "(metrics), Challenges & opportunities (comparison), Action plan (table: Action/Owner/Due), Next steps (closing). "
-        "Skip a slide only if there is no supporting content.\n" + DECK_SPEC
+        "Skip a slide only if there is no supporting content. " + template_hint + "\n" + DECK_SPEC
     )
     payload = "\n\n".join(filter(None, [
         company_block(brand),

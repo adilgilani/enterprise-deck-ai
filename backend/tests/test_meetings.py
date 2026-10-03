@@ -130,3 +130,30 @@ async def test_urdu_script_is_romanized_when_requested():
 
     out = await romanize("کیا فنانس بجٹ کی تصدیق کر سکتا ہے؟", _uuid.uuid4(), None, None)
     assert out and not any("\u0600" <= ch <= "\u06ff" for ch in out)
+
+
+async def test_meeting_deck_uses_brand_default_template(client, ws):
+    h = ws["headers"]
+    # a template in editorial style, set as the default brand's default template
+    tpl = (await client.post("/templates", json={"name": "Board Readout", "category": "meeting", "deck": {"title": "T", "theme": {"style": "editorial"}, "slides": [
+        {"layout": "hero", "title": "Cover", "background": "brand", "transition": {"type": "dissolve"}},
+        {"layout": "table", "title": "Actions", "background": "inverse", "transition": {"type": "slide"}},
+    ]}}, headers=h)).json()
+    brand = (await client.get("/brand", headers=h)).json()
+    assert (await client.patch(f"/brand/{brand['id']}", json={"default_template_id": tpl["id"]}, headers=h)).status_code == 200
+
+    m = (await client.post("/meetings", json={"title": "Ops review", "participants": [{"name": "Ana"}, {"name": "Ben"}]}, headers=h)).json()
+    await client.post(f"/meetings/{m['id']}/transcript", json={"segments": [
+        {"speaker": "Ana", "text": "We decided to hire two engineers by next Friday."},
+        {"speaker": "Ben", "text": "I'll send the budget of $120K to finance by Tuesday."},
+    ]}, headers=h)
+    job = (await client.post(f"/meetings/{m['id']}/end", json={"output": "presentation"}, headers=h)).json()
+    assert job["status"] == "completed", job
+    deck = (await client.get(f"/presentations/{job['result']['presentation_id']}", headers=h)).json()
+    assert deck["deck"]["theme"]["style"] == "editorial"  # template style, not the brand default (executive)
+    slides = deck["deck"]["slides"]
+    hero = next(s for s in slides if s["layout"] == "hero")
+    assert hero["background"] == "brand" and hero["transition"]["type"] == "dissolve"
+    table = next(s for s in slides if s["layout"] == "table")
+    assert table["background"] == "inverse"
+    assert (await client.get(f"/templates/{tpl['id']}", headers=h)).json()["usage_count"] == 1

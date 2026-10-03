@@ -14,7 +14,7 @@ from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.base import utcnow
-from app.models import ActionItem, Meeting, MeetingInsight, MeetingParticipant, Organization, Presentation, Transcript, TranscriptSegment
+from app.models import ActionItem, Meeting, MeetingInsight, MeetingParticipant, Organization, Presentation, Template, Transcript, TranscriptSegment
 from app.schemas.ai import LiveInsights, MeetingIntelligence
 from app.schemas.deck import Deck, DeckContent
 from app.services import brand as brand_svc
@@ -206,14 +206,53 @@ async def live_extract(session: AsyncSession, m: Meeting, segs: list[dict[str, A
     return insights
 
 
+async def default_template(session: AsyncSession, brand: Any) -> Template | None:
+    """The brand's default template from Brand Studio (same workspace only)."""
+    if brand is None or not brand.default_template_id:
+        return None
+    t = await session.get(Template, brand.default_template_id)
+    return t if t is not None and t.organization_id == brand.organization_id else None
+
+
+def apply_template_design(slides: list[Any], tpl_slides: list[dict[str, Any]]) -> list[Any]:
+    """Carry the template's per-layout design (background treatment, transition) onto generated slides."""
+    if not tpl_slides:
+        return slides
+    by_layout: dict[str, dict[str, Any]] = {}
+    for s in tpl_slides:
+        by_layout.setdefault(str(s.get("layout")), s)
+    fallback_transition = (tpl_slides[0].get("transition") or {}).get("type")
+    out = []
+    for s in slides:
+        ref = by_layout.get(s.layout)
+        if ref is not None:
+            if ref.get("background") in ("default", "inverse", "brand"):
+                s.background = ref["background"]
+            tr = ref.get("transition") or {}
+            if tr.get("type") in ("none", "fade", "dissolve", "slide"):
+                s.transition.type = tr["type"]
+        elif fallback_transition in ("none", "fade", "dissolve", "slide"):
+            s.transition.type = fallback_transition
+        out.append(s)
+    return out
+
+
 async def create_meeting_deck(session: AsyncSession, m: Meeting, user_id: uuid.UUID | None) -> Presentation:
     org = await session.get(Organization, m.organization_id)
     brand = await brand_svc.get_brand(session, m.organization_id)
     names = [p.name for p in (await session.execute(select(MeetingParticipant).where(MeetingParticipant.meeting_id == m.id))).scalars()]
     intel = m.intelligence or {}
     date_label = (m.started_at or utcnow()).strftime("%B %d, %Y")
+    template = await default_template(session, brand)
+    tpl_schema = (template.schema or {}) if template else {}
+    tpl_slides = [s for s in tpl_schema.get("slides", []) if isinstance(s, dict)]
     instructions, payload = prompts.meeting_deck_prompt(
-        title=m.title, intelligence=intel, brand=brand_svc.brand_context(brand), participants=names
+        title=m.title,
+        intelligence=intel,
+        brand=brand_svc.brand_context(brand),
+        participants=names,
+        template_name=template.name if template else None,
+        template_layouts=[str(s.get("layout")) for s in tpl_slides if s.get("layout")],
     )
     content = await ai_service.generate(
         task="meeting.deck",
@@ -225,21 +264,27 @@ async def create_meeting_deck(session: AsyncSession, m: Meeting, user_id: uuid.U
                  "company": (brand.company_profile if brand else {}) or {}},
         max_tokens=10000,
     )
-    theme = await brand_svc.theme_for(session, brand)
+    tpl_style = (tpl_schema.get("theme") or {}).get("style")
+    theme = await brand_svc.theme_for(session, brand, tpl_style)
+    slides = apply_template_design(content.slides, tpl_slides)
     p = Presentation(
         organization_id=m.organization_id,
         title=content.title,
-        description=f"Generated from meeting “{m.title}”",
+        description=f"Generated from meeting “{m.title}”" + (f" · {template.name} template" if template else ""),
         created_by=user_id or m.created_by,
         brand_system_id=brand.id if brand else None,
+        template_id=template.id if template else None,
         source="meeting",
         source_meeting_id=m.id,
-        options={"deck_type": "meeting", "slide_count": len(content.slides)},
+        options={"deck_type": "meeting", "slide_count": len(slides), **({"template": template.name} if template else {})},
+        style=theme["style"],
         status="draft",
     )
+    if template is not None:
+        template.usage_count += 1
     session.add(p)
     await session.flush()
-    await save_deck(session, p, Deck(title=content.title, subtitle=content.subtitle, slides=content.slides, theme=theme))  # type: ignore[arg-type]
+    await save_deck(session, p, Deck(title=content.title, subtitle=content.subtitle, slides=slides, theme=theme))  # type: ignore[arg-type]
     m.presentation_id = p.id
     await session.commit()
     return p
