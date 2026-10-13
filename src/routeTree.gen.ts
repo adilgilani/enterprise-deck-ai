@@ -12,13 +12,17 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AssetsRouteImport } from './routes/assets'
-import { Route as BrandRouteImport } from './routes/brand'
+import { Route as GeneratedRouteImport } from './routes/generated'
 import { Route as LibraryRouteImport } from './routes/library'
-import { Route as MeetingsRouteImport } from './routes/meetings'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as TeamRouteImport } from './routes/team'
 import { Route as TemplatesRouteImport } from './routes/templates'
+import { Route as BrandIndexRouteImport } from './routes/brand.index'
+import { Route as BrandBrandIdRouteImport } from './routes/brand.$brandId'
 import { Route as EditorIdRouteImport } from './routes/editor.$id'
+import { Route as MeetingsIndexRouteImport } from './routes/meetings.index'
+import { Route as MeetingsLiveRouteImport } from './routes/meetings.live'
+import { Route as MeetingsNewRouteImport } from './routes/meetings.new'
 import { Route as PresentationsIndexRouteImport } from './routes/presentations.index'
 import { Route as PresentationsIdRouteImport } from './routes/presentations.$id'
 import { Route as PresentationsNewRouteImport } from './routes/presentations.new'
@@ -40,19 +44,14 @@ const AssetsRoute = AssetsRouteImport.update({
   path: '/assets',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BrandRoute = BrandRouteImport.update({
-  id: '/brand',
-  path: '/brand',
+const GeneratedRoute = GeneratedRouteImport.update({
+  id: '/generated',
+  path: '/generated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LibraryRoute = LibraryRouteImport.update({
   id: '/library',
   path: '/library',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MeetingsRoute = MeetingsRouteImport.update({
-  id: '/meetings',
-  path: '/meetings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -70,9 +69,34 @@ const TemplatesRoute = TemplatesRouteImport.update({
   path: '/templates',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BrandIndexRoute = BrandIndexRouteImport.update({
+  id: '/brand/',
+  path: '/brand/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrandBrandIdRoute = BrandBrandIdRouteImport.update({
+  id: '/brand/$brandId',
+  path: '/brand/$brandId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EditorIdRoute = EditorIdRouteImport.update({
   id: '/editor/$id',
   path: '/editor/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeetingsIndexRoute = MeetingsIndexRouteImport.update({
+  id: '/meetings/',
+  path: '/meetings/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeetingsLiveRoute = MeetingsLiveRouteImport.update({
+  id: '/meetings/live',
+  path: '/meetings/live',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeetingsNewRoute = MeetingsNewRouteImport.update({
+  id: '/meetings/new',
+  path: '/meetings/new',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PresentationsIndexRoute = PresentationsIndexRouteImport.update({
@@ -105,16 +129,20 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
   '/assets': typeof AssetsRoute
-  '/brand': typeof BrandRoute
+  '/generated': typeof GeneratedRoute
   '/library': typeof LibraryRoute
-  '/meetings': typeof MeetingsRoute
   '/settings': typeof SettingsRoute
   '/team': typeof TeamRoute
   '/templates': typeof TemplatesRoute
+  '/brand/$brandId': typeof BrandBrandIdRoute
   '/editor/$id': typeof EditorIdRoute
+  '/meetings/live': typeof MeetingsLiveRoute
+  '/meetings/new': typeof MeetingsNewRoute
   '/presentations/$id': typeof PresentationsIdRoute
   '/presentations/new': typeof PresentationsNewRoute
   '/proposals/new': typeof ProposalsNewRoute
+  '/brand/': typeof BrandIndexRoute
+  '/meetings/': typeof MeetingsIndexRoute
   '/presentations/': typeof PresentationsIndexRoute
   '/proposals/': typeof ProposalsIndexRoute
 }
@@ -122,16 +150,20 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
   '/assets': typeof AssetsRoute
-  '/brand': typeof BrandRoute
+  '/generated': typeof GeneratedRoute
   '/library': typeof LibraryRoute
-  '/meetings': typeof MeetingsRoute
   '/settings': typeof SettingsRoute
   '/team': typeof TeamRoute
   '/templates': typeof TemplatesRoute
+  '/brand/$brandId': typeof BrandBrandIdRoute
   '/editor/$id': typeof EditorIdRoute
+  '/meetings/live': typeof MeetingsLiveRoute
+  '/meetings/new': typeof MeetingsNewRoute
   '/presentations/$id': typeof PresentationsIdRoute
   '/presentations/new': typeof PresentationsNewRoute
   '/proposals/new': typeof ProposalsNewRoute
+  '/brand': typeof BrandIndexRoute
+  '/meetings': typeof MeetingsIndexRoute
   '/presentations': typeof PresentationsIndexRoute
   '/proposals': typeof ProposalsIndexRoute
 }
@@ -140,16 +172,20 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
   '/assets': typeof AssetsRoute
-  '/brand': typeof BrandRoute
+  '/generated': typeof GeneratedRoute
   '/library': typeof LibraryRoute
-  '/meetings': typeof MeetingsRoute
   '/settings': typeof SettingsRoute
   '/team': typeof TeamRoute
   '/templates': typeof TemplatesRoute
+  '/brand/$brandId': typeof BrandBrandIdRoute
   '/editor/$id': typeof EditorIdRoute
+  '/meetings/live': typeof MeetingsLiveRoute
+  '/meetings/new': typeof MeetingsNewRoute
   '/presentations/$id': typeof PresentationsIdRoute
   '/presentations/new': typeof PresentationsNewRoute
   '/proposals/new': typeof ProposalsNewRoute
+  '/brand/': typeof BrandIndexRoute
+  '/meetings/': typeof MeetingsIndexRoute
   '/presentations/': typeof PresentationsIndexRoute
   '/proposals/': typeof ProposalsIndexRoute
 }
@@ -159,16 +195,20 @@ export interface FileRouteTypes {
     | '/'
     | '/analytics'
     | '/assets'
-    | '/brand'
+    | '/generated'
     | '/library'
-    | '/meetings'
     | '/settings'
     | '/team'
     | '/templates'
+    | '/brand/$brandId'
     | '/editor/$id'
+    | '/meetings/live'
+    | '/meetings/new'
     | '/presentations/$id'
     | '/presentations/new'
     | '/proposals/new'
+    | '/brand/'
+    | '/meetings/'
     | '/presentations/'
     | '/proposals/'
   fileRoutesByTo: FileRoutesByTo
@@ -176,16 +216,20 @@ export interface FileRouteTypes {
     | '/'
     | '/analytics'
     | '/assets'
-    | '/brand'
+    | '/generated'
     | '/library'
-    | '/meetings'
     | '/settings'
     | '/team'
     | '/templates'
+    | '/brand/$brandId'
     | '/editor/$id'
+    | '/meetings/live'
+    | '/meetings/new'
     | '/presentations/$id'
     | '/presentations/new'
     | '/proposals/new'
+    | '/brand'
+    | '/meetings'
     | '/presentations'
     | '/proposals'
   id:
@@ -193,16 +237,20 @@ export interface FileRouteTypes {
     | '/'
     | '/analytics'
     | '/assets'
-    | '/brand'
+    | '/generated'
     | '/library'
-    | '/meetings'
     | '/settings'
     | '/team'
     | '/templates'
+    | '/brand/$brandId'
     | '/editor/$id'
+    | '/meetings/live'
+    | '/meetings/new'
     | '/presentations/$id'
     | '/presentations/new'
     | '/proposals/new'
+    | '/brand/'
+    | '/meetings/'
     | '/presentations/'
     | '/proposals/'
   fileRoutesById: FileRoutesById
@@ -211,16 +259,20 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnalyticsRoute: typeof AnalyticsRoute
   AssetsRoute: typeof AssetsRoute
-  BrandRoute: typeof BrandRoute
+  GeneratedRoute: typeof GeneratedRoute
   LibraryRoute: typeof LibraryRoute
-  MeetingsRoute: typeof MeetingsRoute
   SettingsRoute: typeof SettingsRoute
   TeamRoute: typeof TeamRoute
   TemplatesRoute: typeof TemplatesRoute
+  BrandBrandIdRoute: typeof BrandBrandIdRoute
   EditorIdRoute: typeof EditorIdRoute
+  MeetingsLiveRoute: typeof MeetingsLiveRoute
+  MeetingsNewRoute: typeof MeetingsNewRoute
   PresentationsIdRoute: typeof PresentationsIdRoute
   PresentationsNewRoute: typeof PresentationsNewRoute
   ProposalsNewRoute: typeof ProposalsNewRoute
+  BrandIndexRoute: typeof BrandIndexRoute
+  MeetingsIndexRoute: typeof MeetingsIndexRoute
   PresentationsIndexRoute: typeof PresentationsIndexRoute
   ProposalsIndexRoute: typeof ProposalsIndexRoute
 }
@@ -248,11 +300,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AssetsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/brand': {
-      id: '/brand'
-      path: '/brand'
-      fullPath: '/brand'
-      preLoaderRoute: typeof BrandRouteImport
+    '/generated': {
+      id: '/generated'
+      path: '/generated'
+      fullPath: '/generated'
+      preLoaderRoute: typeof GeneratedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/library': {
@@ -260,13 +312,6 @@ declare module '@tanstack/react-router' {
       path: '/library'
       fullPath: '/library'
       preLoaderRoute: typeof LibraryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/meetings': {
-      id: '/meetings'
-      path: '/meetings'
-      fullPath: '/meetings'
-      preLoaderRoute: typeof MeetingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -290,11 +335,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TemplatesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/brand/': {
+      id: '/brand/'
+      path: '/brand'
+      fullPath: '/brand/'
+      preLoaderRoute: typeof BrandIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/brand/$brandId': {
+      id: '/brand/$brandId'
+      path: '/brand/$brandId'
+      fullPath: '/brand/$brandId'
+      preLoaderRoute: typeof BrandBrandIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/editor/$id': {
       id: '/editor/$id'
       path: '/editor/$id'
       fullPath: '/editor/$id'
       preLoaderRoute: typeof EditorIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/meetings/': {
+      id: '/meetings/'
+      path: '/meetings'
+      fullPath: '/meetings/'
+      preLoaderRoute: typeof MeetingsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/meetings/live': {
+      id: '/meetings/live'
+      path: '/meetings/live'
+      fullPath: '/meetings/live'
+      preLoaderRoute: typeof MeetingsLiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/meetings/new': {
+      id: '/meetings/new'
+      path: '/meetings/new'
+      fullPath: '/meetings/new'
+      preLoaderRoute: typeof MeetingsNewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/presentations/': {
@@ -339,16 +419,20 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnalyticsRoute: AnalyticsRoute,
   AssetsRoute: AssetsRoute,
-  BrandRoute: BrandRoute,
+  GeneratedRoute: GeneratedRoute,
   LibraryRoute: LibraryRoute,
-  MeetingsRoute: MeetingsRoute,
   SettingsRoute: SettingsRoute,
   TeamRoute: TeamRoute,
   TemplatesRoute: TemplatesRoute,
+  BrandBrandIdRoute: BrandBrandIdRoute,
   EditorIdRoute: EditorIdRoute,
+  MeetingsLiveRoute: MeetingsLiveRoute,
+  MeetingsNewRoute: MeetingsNewRoute,
   PresentationsIdRoute: PresentationsIdRoute,
   PresentationsNewRoute: PresentationsNewRoute,
   ProposalsNewRoute: ProposalsNewRoute,
+  BrandIndexRoute: BrandIndexRoute,
+  MeetingsIndexRoute: MeetingsIndexRoute,
   PresentationsIndexRoute: PresentationsIndexRoute,
   ProposalsIndexRoute: ProposalsIndexRoute,
 }
